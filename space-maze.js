@@ -153,13 +153,13 @@ let level = 0;
 const levels = [
   map`
 p.
-.k`,
+.k`, //0
   map`
 .aa..
 .....
 ...a.
 ..a..
-pak..`, //0
+pak..`, //1
   map`
 ...a.....
 ca...aa..
@@ -169,7 +169,7 @@ aaa.aa..a
 ..a.akaa.
 a...a.g..
 aaa.aaa.a
-.......a.`, //1
+.......a.`, //2
 ];
 
 setMap(levels[level])
@@ -186,6 +186,10 @@ onInput("j", () => {
 }),
 
 afterInput(() => {
+  const playerSprite = getFirst(player)
+  const playerPosX = playerSprite.x;
+  const playerPosY = playerSprite.y;
+  console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
     level +=1;
@@ -200,9 +204,12 @@ afterInput(() => {
   if(collectCrystal.length > 0){
     onInput("i", () => {
       getFirst(crystal).remove();
-      getFirst(gate).remove();
+      const crystals = 1
       })
-
+  }
+  if(crystals > 0)
+  {
+    
   }
 
 })
