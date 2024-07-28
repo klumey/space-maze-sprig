@@ -186,13 +186,13 @@ onInput("j", () => {
 }),
 
 afterInput(() => {
-  const playerSprite = getFirst(player)
-  const playerPosX = playerSprite.x;
-  const playerPosY = playerSprite.y;
+  let playerSprite = getFirst(player)
+  let playerPosX = playerSprite.x;
+  let playerPosY = playerSprite.y;
   const crystalLv = 2
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
   
-if (crystlLv = level){
+if (crystalLv == level){
   let crystals = 0
   const collectCrystal = tilesWith(player, crystal)
   if(collectCrystal.length > 0){
@@ -204,16 +204,17 @@ if (crystlLv = level){
   if(crystals > 0)
   {
     const gateSprite = getFirst(gate)
-    const playerGateDistance = Math.abs(gateSprite.x - playerPosX)
-    playerGateDistance += Math.abs(gateSprite.x - playerPosY);
-    if(playerGateDistance <= 1)
+    //let playerGateDistance = Math.abs(gateSprite.x - playerPosX)
+    //playerGateDistance += Math.abs(gateSprite.x - playerPosY);
+    console.log("Player - gate coordinates(x,y):", Math.abs(gateSprite.x - playerPosX), Math.abs(gateSprite.y - playerPosY));
+    if(Math.abs(gateSprite.x - playerPosX) <= 1 && Math.abs(gateSprite.y - playerPosY) <=1 ){
     {
       onInput("k", () => {
         getFirst(gate).remove();
-        crystals = 0;
+        crystals -= 1;
       })
     }
-    
+    }
   }
   }
   const  onPlanet = tilesWith(player, planet)
