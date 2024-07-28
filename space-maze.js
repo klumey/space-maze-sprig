@@ -126,7 +126,7 @@ L11LL111LLL111LL
 ....7777777.....
 ................`],
 )
-setSolids([player,asteroid])
+setSolids([player,asteroid,gate])
 setPushables({
 	[ player ]: []
 })
@@ -189,7 +189,33 @@ afterInput(() => {
   const playerSprite = getFirst(player)
   const playerPosX = playerSprite.x;
   const playerPosY = playerSprite.y;
+  const crystalLv = 2
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
+  
+if (crystlLv = level){
+  let crystals = 0
+  const collectCrystal = tilesWith(player, crystal)
+  if(collectCrystal.length > 0){
+    onInput("i", () => {
+      getFirst(crystal).remove();
+      crystals += 1;
+      })
+  }
+  if(crystals > 0)
+  {
+    const gateSprite = getFirst(gate)
+    const playerGateDistance = Math.abs(gateSprite.x - playerPosX)
+    playerGateDistance += Math.abs(gateSprite.x - playerPosY);
+    if(playerGateDistance <= 1)
+    {
+      onInput("k", () => {
+        getFirst(gate).remove();
+        crystals = 0;
+      })
+    }
+    
+  }
+  }
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
     level +=1;
@@ -200,16 +226,4 @@ afterInput(() => {
       addText("You win!", { y: 4, color: color`6` }); 
       }
     }
-  const collectCrystal = tilesWith(player, crystal)
-  if(collectCrystal.length > 0){
-    onInput("i", () => {
-      getFirst(crystal).remove();
-      const crystals = 1
-      })
-  }
-  if(crystals > 0)
-  {
-    
-  }
-
 })
