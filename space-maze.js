@@ -9,6 +9,7 @@
 w,s,a,d - to move
 j - reset current map if stuck
 i - collect/use an item
+k - use an item
 
 
 */
@@ -222,7 +223,10 @@ p...a.s...`//3
 
 setMap(levels[level])
   setBackground("x");
-
+addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})
 onInput("j", () => {
     setMap(levels[level])
 });
@@ -265,10 +269,11 @@ if (level == 2){
     }
   }
   }
-//----------------------------------------------------------
-if (level == 3)
+//--------------------------Lv 3------------------------------
+else if (level == 3)
 {
-  const maxSteps = 41
+  const maxSteps = 42
+  const onBlackHole = tilesWith(player, blackhole)
   addText("Steps left:" + (maxSteps - stepCount), { y: 4, color: color`4` });
   onInput("j", () => {
     stepCount = 0;
@@ -279,13 +284,25 @@ if (level == 3)
     stepCount = 0;
     setMap(levels[level]);
   }
+  if(onBlackHole.length >=1)
+  {
+    clearText();
+    stepCount = 0;
+    setMap(levels[level]);
+  }
 }
+  // -------------------------------------------------------------
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
     level +=1;
     if (level < levels.length) { 
       setMap(levels[level]);
       stepCount = 0;
+      clearText();
+      addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})
       }
     else {
       clearText();
