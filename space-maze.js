@@ -34,14 +34,14 @@ setLegend(
 ................
 ......LLLLL.....
 ....LLLLLLLL....
-....4LLLLLL4....
-....4L4LL4L4L...
-..LLLL4LL4LLL...
-L11LLLLLLLLLL11L
-LLL111LLLLLL11LL
-.LLLL11111111LLL
-...LLLLLLLLLLLLL
-........LLLLL...
+...L4LLLLLL4L...
+..4L4L4LL4L4L4..
+1LLLLL4LL4LLLLL1
+L11LLLLLLLLLL1LL
+LLLL11LLLLLL11LL
+.LLLL11L111L1LLL
+...LLLLLLLLLLLL.
+......LLLLLLL...
 ................
 ................
 ................` ],
@@ -222,8 +222,8 @@ onInput("d", () => {
 
 
 
-// ---------------levels ----------
-let level = 3;
+// ---------------levels/maps ----------
+let level = 2;
 const levels = [
   map`
 p.
@@ -247,14 +247,25 @@ aaa.aaa.a
   map`
 ..ba...ba.
 a.aa.a.aaa
-as...a.r..
+as...a....
 asaaaaaaa.
 ....aka.a.
 .a..a.b.a.
-raa.a.rsa.
+.aa.a..sa.
 .ba.aaasa.
-aaasaba.sr
-p...a.s...`//3
+aaasaba.s.
+p...a.s...`,//3
+  map`
+ca....s..a
+.a.aaaa.a.
+.a..a.a.a.
+...s..a...
+ba.saaa.aa
+aaa.abs...
+a..s.asaa.
+a.asaa....
+a..apa.aab
+a....a.g.k`,//4
 ];
 
 setMap(levels[level])
@@ -267,33 +278,34 @@ onInput("j", () => {
     setMap(levels[level])
 });
 
+//--------------------------------------------
+
 let previousX = getFirst(player).x
 let previousY = getFirst(player).y
-
+let playerSprite = getFirst(player);
+let playerPosX = playerSprite.x;
+let playerPosY = playerSprite.y;
 let crystals = 0;
 let stepCount = 0;
+let holesCount = 0;
+let holeX = 0;
+let holeY = 0;
+
+//--------------------after input-------------------------
+
 afterInput(() => {
-    console.log("Player's prev coordinates(x,y):", previousX, previousY);
-  const sprite = getTile(previousX, previousY);
-  if(sprite.type == crack)
-  {
-    //clearTile(previousX, previousY);
-    lastTile.type = spacerip;
-  }
+    //console.log("Player's prev coordinates(x,y):", previousX, previousY);
+
+
 ///----------------player position -----------
-  let playerSprite = getFirst(player);
-  let playerPosX = playerSprite.x;
-  let playerPosY = playerSprite.y;
-  //const wantedCrys = 1
-  //const crystalLv = 2
-  
+  playerPosX = playerSprite.x;
+  playerPosY = playerSprite.y;
   previousX = getFirst(player).x
   previousY = getFirst(player).y
-  stepCount += 1;
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
-//-----  ----------          Lv 2  ---------------------
-if (level == 2){
-  const collectCrystal = tilesWith(player, crystal)
+  stepCount += 1;
+  
+  let collectCrystal = tilesWith(player, crystal)
   if(collectCrystal.length > 0){
     onInput("i", () => {
       getFirst(crystal).remove();
@@ -303,9 +315,9 @@ if (level == 2){
   }
   if(crystals > 0)
   {
-    const gateSprite = getFirst(gate)
-    let gateDisX = Math.abs(gateSprite.x - playerSprite.x);
-    let gateDisY = Math.abs(gateSprite.y - playerSprite.y);
+    let gateSprite = tilesWith(gate);
+    let gateDisX = Math.abs(gateSprite[0].x - playerPosX);
+    let gateDisY = Math.abs(gateSprite[0].y - playerPosY);
     console.log("Player - gate coordinates(x,y):", gateDisX, gateDisY);
     if(gateDisX <= 1 && gateDisY <=1 ){
     {
@@ -317,33 +329,37 @@ if (level == 2){
     }
     }
   }
-  }
-//--------------------------Lv 3------------------------------
-else if (level == 3)
-{
-  const maxSteps = 42
-  const onBlackHole = tilesWith(player, blackhole)
-  addText("Steps left:" + (maxSteps - stepCount), { y: 4, color: color`4` });
-  onInput("j", () => {
-    stepCount = 0;
-  });
-  if( stepCount > maxSteps )
+
+//else if (level == 3)
+//{
+  //--------------------------Lv 3------------------------------
+  if(level==3)
   {
-    clearText();
-    stepCount = 0;
-    setMap(levels[level]);
-    addText("Lv:" + (level),{
+    const maxSteps = 42
+    addText("Steps left:" + (maxSteps - stepCount), { y: 4, color: color`4` });
+    onInput("j", () => {
+      stepCount = 0;
+    });
+    if( stepCount > maxSteps )
+    {
+      clearText();
+      stepCount = 0;
+      setMap(levels[level]);
+      addText("Lv:" + (level),{
            x:1,
            y:1,
         color: color`8`})
+    }
   }
+  
+  const onBlackHole = tilesWith(player, blackhole)
   if(onBlackHole.length >=1)
   {
     clearText();
     stepCount = 0;
     setMap(levels[level]);
   }
-}
+//}
   // -------------------------------------------------------------
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
