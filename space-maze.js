@@ -114,22 +114,22 @@ L11LL111LLL111LL
 ......C.C.......
 ......CCC.......`],
   [crystal, bitmap`
-.......7........
-...77777777.....
-...77HHHHH777...
-.777HHHHHHHH77..
-.77HHHHHHHHHH7..
-.7HHH88888HHH7..
-.77H888888HH77..
-777788888877777.
-..77888888877777
-.7HH8888888HH77.
-.7HH8888888HH77.
-.7HHHHHHHHHHH77.
-..7HHHHHHHHH77..
-..777HHHHH777...
-....7777777.....
-................`],
+7.....777.55....
+..7557HHHH75....
+...72HH828877...
+..77HH8H888825..
+.77HH88H2888875.
+..HHH88H2888887.
+.7HH88H22888887.
+.7H88H2882888875
+.5HH2H28828H287.
+57H882288222887.
+57H88H288288887.
+.7HHH8H22888885.
+.57HHH8H2888875.
+7557HH8H28887...
+...77HHH28877...
+...5.7HHHH7.57..`],
   [spacerock, bitmap`
 ................
 ...22222222222..
@@ -150,19 +150,19 @@ L11LL111LLL111LL
   [blackhole, bitmap`
 ................
 ................
-................
-.......00.......
-..99900000009...
-.99900000000999.
-996600000000099.
-9699000000000993
-9696000000000699
-3966900000000969
-3996966000006969
-..39996666966999
-...399966996993.
-......99993333..
-................
+....99666699....
+...9662222669...
+..622200002266..
+66220000000226..
+992000000000226.
+966000000000029.
+396966000000026.
+.999969666902299
+..92093336696669
+..92000099993393
+..662200000269..
+...6622222226...
+.....9966966....
 ................`],
   [crack, bitmap`
 ................
@@ -205,7 +205,7 @@ setPushables({
 	[ player ]: [spacerock],
 })
 
-//---------------controls----------------------
+//---------------controls-------------------------------
 
   onInput("w", () => {
     getFirst(player).y -=1
@@ -219,11 +219,15 @@ onInput("a", () => {
 onInput("d", () => {
   getFirst(player).x +=1
 })
+// ------------ lv reset -------
+onInput("j", () => {
+    setMap(levels[level])
+  //reset gate coords for every change
+    gateCoordinates = { x: 0, y: 0 };
+});
 
-
-
-// ---------------levels/maps ----------
-let level = 2;
+// ---------------levels/maps ------------------------
+let level = 0;
 const levels = [
   map`
 p.
@@ -274,65 +278,87 @@ addText("Lv:" + (level),{
            x:1,
            y:1,
         color: color`8`})
-onInput("j", () => {
-    setMap(levels[level])
-});
+
 
 //--------------------------------------------
 
-let previousX = getFirst(player).x
-let previousY = getFirst(player).y
-let playerSprite = getFirst(player);
-let playerPosX = playerSprite.x;
-let playerPosY = playerSprite.y;
+//let previousX = getFirst(player).x
+//let previousY = getFirst(player).y
+
+let playerPosX = 0;
+let playerPosY = 0;
 let crystals = 0;
 let stepCount = 0;
-let holesCount = 0;
-let holeX = 0;
-let holeY = 0;
+//let holesCount = 0;
+//let holeX = 0;
+//let holeY = 0;
+let gateCoordinates = { x: 0, y: 0 };
 
 //--------------------after input-------------------------
 
 afterInput(() => {
+
+  
     //console.log("Player's prev coordinates(x,y):", previousX, previousY);
 
 
-///----------------player position -----------
+///----------------player position ---------------------
+  
+  let playerSprite = getFirst(player);
   playerPosX = playerSprite.x;
   playerPosY = playerSprite.y;
-  previousX = getFirst(player).x
-  previousY = getFirst(player).y
+  //previousX = getFirst(player).x
+  //previousY = getFirst(player).y
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
   stepCount += 1;
+
+  
+//------------------ collecting the crystal ---------------
+
   
   let collectCrystal = tilesWith(player, crystal)
-  if(collectCrystal.length > 0){
-    onInput("i", () => {
-      getFirst(crystal).remove();
-      crystals = 1;
+  let crystalSprite = getAll("c");
+  if (playerPosX >= 0 && playerPosY >= 0) {
+    //check if tile that player is standing on contains sprite - crystal
+        let spriteToRemove = getTile(playerPosX, playerPosY).find(sprite => sprite.type === crystal);
+        if (spriteToRemove) {
+           onInput("i", () => {
+            spriteToRemove.remove();
+            crystals += 1;
       
-      })
-  }
+            })
+      }
+    }
+  
+// --------------------- opening the gate with crystal -----------------------
   if(crystals > 0)
   {
-    let gateSprite = tilesWith(gate);
-    let gateDisX = Math.abs(gateSprite[0].x - playerPosX);
-    let gateDisY = Math.abs(gateSprite[0].y - playerPosY);
+    //get coords of the first gate visible on map
+    let gateSprite = getAll("g")[0];
+    //new coordinates
+    gateCoordinates.x = gateSprite.x;
+    gateCoordinates.y = gateSprite.y;
+    //calculate the distance
+    let gateDisX = Math.abs(gateSprite.x - playerPosX);
+    let gateDisY = Math.abs(gateSprite.y - playerPosY);
     console.log("Player - gate coordinates(x,y):", gateDisX, gateDisY);
+    //check if player is standing next to the gate
     if(gateDisX <= 1 && gateDisY <=1 ){
-    {
-      onInput("k", () => {
-        clearTile(gateSprite.x, gateSprite.y);
-        crystals = 0;
-        console.log("Crystals:", crystals);
-      })
+      //check if coordinates are only for this map
+      if (gateSprite.x === gateCoordinates.x && gateSprite.y === gateCoordinates.y) {
+        onInput("k", () => {
+          //use new coordinates and clear tile with the gate
+          clearTile(gateCoordinates.x, gateCoordinates.y);
+          crystals = 0;
+          console.log("Crystals:", crystals);
+        })
     }
     }
   }
 
-//else if (level == 3)
-//{
-  //--------------------------Lv 3------------------------------
+  
+  //--------------------------Lv 3 - step counter------------------------------
+  
   if(level==3)
   {
     const maxSteps = 42
@@ -352,6 +378,11 @@ afterInput(() => {
     }
   }
   
+//------------------------------------------------------------
+
+  
+  //checking if player stepped on a black hole, then restarting the level
+  
   const onBlackHole = tilesWith(player, blackhole)
   if(onBlackHole.length >=1)
   {
@@ -359,8 +390,8 @@ afterInput(() => {
     stepCount = 0;
     setMap(levels[level]);
   }
-//}
-  // -------------------------------------------------------------
+
+  // check if stepped on a planet - then win screen or proceed to the next level
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
     level +=1;
@@ -372,6 +403,8 @@ afterInput(() => {
            x:1,
            y:1,
         color: color`8`})
+      //reset the gate coordinates after changing map
+      gateCoordinates = { x: 0, y: 0 };
       }
     else {
       clearText();
