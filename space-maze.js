@@ -8,7 +8,7 @@
 ----------------------CONTROLS--------------
 w,s,a,d - to move
 j - reset current map if stuck
-i - collect an item
+i - collect/use an item
 
 
 */
@@ -21,6 +21,8 @@ i - collect an item
     const asteroid = "a"
     const gate = "g"
     const crystal = "c"
+    const spacerock = "s"
+    const blackhole = "b"
 
 setLegend(
 	[ player, bitmap`
@@ -125,10 +127,45 @@ L11LL111LLL111LL
 ..777HHHHH777...
 ....7777777.....
 ................`],
+  [spacerock, bitmap`
+................
+...22222222222..
+..2200000000022.
+.22001111LLL0022
+.20011LLLLLLL002
+.2011LL11LLL1L02
+.201LLL11LLL1102
+.201LLLL1LLL1102
+.201LLLLLLLLLL02
+.201LLLLLL11LL02
+.20LLLLLLL11LL02
+.20L11LLLL11LL02
+.200L1LLLLLLL002
+.2200LLL11110022
+..2200000000022.
+...22222222222..`],
+  [blackhole, bitmap`
+................
+................
+................
+.......00.......
+..99900000009...
+.99900000000999.
+996600000000099.
+9699000000000993
+9696000000000699
+3966900000000969
+3996966000006969
+..39996666966999
+...399966996993.
+......99993333..
+................
+................`],
 )
-setSolids([player,asteroid,gate])
+setSolids([player,asteroid,gate,spacerock])
 setPushables({
-	[ player ]: []
+    [ spacerock ]: [spacerock],
+	[ player ]: [spacerock],
 })
 
 //---------------controls----------------------
@@ -170,6 +207,17 @@ aaa.aa..a
 a...a.g..
 aaa.aaa.a
 .......a.`, //2
+  map`
+..ba...ba.
+a.aa.a.aaa
+as...a....
+asaaaaaaa.
+....aka.a.
+.a..a.b.a.
+.aa.a..sa.
+.ba.aaasa.
+aaasaba.s.
+p...a.s...`//3
 ];
 
 setMap(levels[level])
@@ -181,15 +229,17 @@ onInput("j", () => {
 
 
 let crystals = 0;
+let stepCount = 0;
 afterInput(() => {
   let playerSprite = getFirst(player);
   let playerPosX = playerSprite.x;
   let playerPosY = playerSprite.y;
-  const wantedCrys = 1
-  const crystalLv = 2
+  //const wantedCrys = 1
+  //const crystalLv = 2
+  stepCount += 1;
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
-//            Lv 2  
-if (crystalLv == level){
+//-----  ----------          Lv 2  ---------------------
+if (level == 2){
   const collectCrystal = tilesWith(player, crystal)
   if(collectCrystal.length > 0){
     onInput("i", () => {
@@ -198,7 +248,6 @@ if (crystalLv == level){
       
       })
   }
-  //console.log("Crystals:", crystals);
   if(crystals > 0)
   {
     const gateSprite = getFirst(gate)
@@ -216,13 +265,30 @@ if (crystalLv == level){
     }
   }
   }
+//----------------------------------------------------------
+if (level == 3)
+{
+  const maxSteps = 41
+  addText("Steps left:" + (maxSteps - stepCount), { y: 4, color: color`4` });
+  onInput("j", () => {
+    stepCount = 0;
+  });
+  if( stepCount > maxSteps )
+  {
+    clearText();
+    stepCount = 0;
+    setMap(levels[level]);
+  }
+}
   const  onPlanet = tilesWith(player, planet)
   if ( onPlanet.length >= 1){ 
     level +=1;
     if (level < levels.length) { 
       setMap(levels[level]);
+      stepCount = 0;
       }
     else {
+      clearText();
       addText("You win!", { y: 4, color: color`6` }); 
       }
     }
