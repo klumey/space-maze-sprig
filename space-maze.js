@@ -1,9 +1,9 @@
 
 /* 
-@title: maze_game_starter
-@author: Cheru Berhanu
+@title: Space maze!
+@author: klumey
 @tags: []
-@addedOn: 2023-08-08
+@addedOn: 2024-07-28
 
 ----------------------CONTROLS--------------
 w,s,a,d - to move
@@ -178,40 +178,39 @@ setMap(levels[level])
 onInput("j", () => {
     setMap(levels[level])
 });
- afterInput(() => {
-  
-    
 
 
-}),
-
+let crystals = 0;
 afterInput(() => {
-  let playerSprite = getFirst(player)
+  let playerSprite = getFirst(player);
   let playerPosX = playerSprite.x;
   let playerPosY = playerSprite.y;
+  const wantedCrys = 1
   const crystalLv = 2
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
-  
+//            Lv 2  
 if (crystalLv == level){
-  let crystals = 0
   const collectCrystal = tilesWith(player, crystal)
   if(collectCrystal.length > 0){
     onInput("i", () => {
       getFirst(crystal).remove();
-      crystals += 1;
+      crystals = 1;
+      
       })
   }
+  //console.log("Crystals:", crystals);
   if(crystals > 0)
   {
     const gateSprite = getFirst(gate)
-    //let playerGateDistance = Math.abs(gateSprite.x - playerPosX)
-    //playerGateDistance += Math.abs(gateSprite.x - playerPosY);
-    console.log("Player - gate coordinates(x,y):", Math.abs(gateSprite.x - playerPosX), Math.abs(gateSprite.y - playerPosY));
-    if(Math.abs(gateSprite.x - playerPosX) <= 1 && Math.abs(gateSprite.y - playerPosY) <=1 ){
+    let gateDisX = Math.abs(gateSprite.x - playerSprite.x);
+    let gateDisY = Math.abs(gateSprite.y - playerSprite.y);
+    console.log("Player - gate coordinates(x,y):", gateDisX, gateDisY);
+    if(gateDisX <= 1 && gateDisY <=1 ){
     {
       onInput("k", () => {
-        getFirst(gate).remove();
-        crystals -= 1;
+        clearTile(gateSprite.x, gateSprite.y);
+        crystals = 0;
+        console.log("Crystals:", crystals);
       })
     }
     }
