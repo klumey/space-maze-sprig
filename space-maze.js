@@ -24,6 +24,8 @@ k - use an item
     const crystal = "c"
     const spacerock = "s"
     const blackhole = "b"
+    const crack = "r"
+    const spacerip = "y"
 
 setLegend(
 	[ player, bitmap`
@@ -162,6 +164,40 @@ L11LL111LLL111LL
 ......99993333..
 ................
 ................`],
+  [crack, bitmap`
+................
+.............1..
+........L...11..
+........LL..L1..
+.......L0..1L...
+........L11LL...
+........L10L....
+........00L.....
+.LLLL.11L1......
+...LL010L1......
+....1L0L1.......
+....LL110LL.....
+...1L1..L0......
+...11....LL.....
+.LL1............
+................`],
+  [spacerip, bitmap`
+.....L.........0
+.L0.L.....LL.LLL
+..0LL.70LLL0LL0.
+..L..L777HHHH0..
+..LL00HH7888H00.
+...L0HH8788HH00.
+.LL0H888778HHL..
+.L777755788H0L..
+.7777HH788HHLL0L
+LLH8757788H0L..0
+.0H878887HHLL...
+.0888HHH700L....
+.088HHH00LL.....
+L0HHH0L0LLL.....
+LLLLLLL....0LL0.
+L0.........0L...`],
 )
 setSolids([player,asteroid,gate,spacerock])
 setPushables({
@@ -187,7 +223,7 @@ onInput("d", () => {
 
 
 // ---------------levels ----------
-let level = 0;
+let level = 3;
 const levels = [
   map`
 p.
@@ -211,13 +247,13 @@ aaa.aaa.a
   map`
 ..ba...ba.
 a.aa.a.aaa
-as...a....
+as...a.r..
 asaaaaaaa.
 ....aka.a.
 .a..a.b.a.
-.aa.a..sa.
+raa.a.rsa.
 .ba.aaasa.
-aaasaba.s.
+aaasaba.sr
 p...a.s...`//3
 ];
 
@@ -231,15 +267,28 @@ onInput("j", () => {
     setMap(levels[level])
 });
 
+let previousX = getFirst(player).x
+let previousY = getFirst(player).y
 
 let crystals = 0;
 let stepCount = 0;
 afterInput(() => {
+    console.log("Player's prev coordinates(x,y):", previousX, previousY);
+  const sprite = getTile(previousX, previousY);
+  if(sprite.type == crack)
+  {
+    //clearTile(previousX, previousY);
+    lastTile.type = spacerip;
+  }
+///----------------player position -----------
   let playerSprite = getFirst(player);
   let playerPosX = playerSprite.x;
   let playerPosY = playerSprite.y;
   //const wantedCrys = 1
   //const crystalLv = 2
+  
+  previousX = getFirst(player).x
+  previousY = getFirst(player).y
   stepCount += 1;
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
 //-----  ----------          Lv 2  ---------------------
@@ -283,6 +332,10 @@ else if (level == 3)
     clearText();
     stepCount = 0;
     setMap(levels[level]);
+    addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})
   }
   if(onBlackHole.length >=1)
   {
@@ -309,4 +362,5 @@ else if (level == 3)
       addText("You win!", { y: 4, color: color`6` }); 
       }
     }
+
 })
