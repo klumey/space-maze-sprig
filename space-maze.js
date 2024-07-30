@@ -8,7 +8,7 @@
 ----------------------CONTROLS--------------
 w,s,a,d - to move
 j - reset current map if stuck
-i - collect/use an item
+i - collect an item
 k - use an item
 
 
@@ -32,120 +32,120 @@ setLegend(
 ................
 ................
 ................
-......LLLLL.....
-....LLLLLLLL....
-...L4LLLLLL4L...
-..4L4L4LL4L4L4..
-1LLLLL4LL4LLLLL1
-L11LLLLLLLLLL1LL
-LLLL11LLLLLL11LL
-.LLLL11L111L1LLL
-...LLLLLLLLLLLL.
-......LLLLLLL...
+....DD444DD.....
+...DD111L0D4....
+.4DD41111LLD4...
+4DL1D141414L4D4.
+D11L11D1D1L000DD
+4111LLLLLLLLL004
+DD11111L1LLL0004
+.44DLLLLLL000DDD
+...DDDD4444DDD..
+................
 ................
 ................
 ................` ],
     [ space, bitmap`
+0000100000001000
+0000000000010100
+0000000000001000
+0000000000000000
+0100000000000000
+1010000100000000
+0100000000000010
+0000000000000000
+0001000000000000
 0000000000000000
 0000000000000000
-0000000020000000
 0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0020000000000200
-0000000000002220
-0000000000000200
-0000000200000000
-0000000000000000
-0002000000000000
-0022200000000000
-0002000000000200
+0001000000001000
+0011100000000000
+0001000010000000
 0000000000000000` ],
   [ asteroid, bitmap `
 ................
-.....LLLLLLLL...
-...LL1111111LL..
-..L11LL111LLL1L.
-..L1111111LLL1L.
-.L11111LL111111L
-L111111LL111L11L
-L11LL1111111L11L
-L11LL1111111111L
-L11LL111LLL111LL
-.L111111LLL11L1L
-..L11L11111111LL
-..L11LL1111111L.
-...LL1111111LL..
-....LLLLLLLL....
+....22121L1L....
+...211L11LLLL...
+..222LLLLLL1LL..
+.22111LLLLLLLLL.
+.211L1LL11LLLLL.
+.2211LL11LLL1LL.
+.211LLL111L1LLL.
+.221LLLLLLLL1LL.
+.21111LL1LLLLLL.
+.2111L1LLLL1LLL.
+.2211LLLLL1LLLL.
+.22121L1LL11LL..
+...2111LLLLLL...
+....2221LL1L....
 ................`],
   [planet, bitmap`
 ................
-.....999999.....
-...3333339999...
-..933333999999..
-.99999999966999.
-.99999999996699.
-.96666699999666.
-.66666699999999.
-.69999999339939.
-.93399999933333.
-.33999999999333.
-.39966699999999.
-..999966999666..
-...9999966669...
-....99999999....
+.....933C3C.....
+...99399333CC...
+..6669939933CC..
+.6999999939333C.
+.66996693333C3C.
+.996669999393CC.
+.6696993339933C.
+.669999999333CC.
+.999996999939CC.
+.6669969939933C.
+.699969333333CC.
+..6699999993CC..
+...699966933C...
+....66633C3C....
 ................` ],
   [gate, bitmap`
-......CCC.......
-......C.C.......
-......CCC.......
-......C.C.......
-......CCC.......
-......C.C.......
-.....C111C......
-....C1LLL1C.....
-....CLLLLLC.....
-....CLLLLLC.....
-....C1LLL1C.....
-.....C111C......
-......C.C.......
-......CCC.......
-......C.C.......
-......CCC.......`],
+.....269CC2.....
+.....2CFFC2.....
+.....2CFFC2.....
+.....29CCC2.....
+....22CFFC22....
+...29CC00CCC2...
+..29CLL11LLCC2..
+..260L1111L0C2..
+..29CLL11LLCC2..
+...29CC00CCC2...
+....22CFFC22....
+.....29FFC2.....
+.....269CC2.....
+.....2CFFC2.....
+.....2CFFC2.....
+.....269CC2.....`],
   [crystal, bitmap`
-7.....777.55....
-..7557HHHH75....
-...72HH828877...
-..77HH8H888825..
-.77HH88H2888875.
-..HHH88H2888887.
+7..7..7...777..7
+..7757HHHH55...7
+...75HH828H57.7.
+..75HH8H888857..
+.75HH88H2888H57.
+..HHH88H28888H7.
 .7HH88H22888887.
-.7H88H2882888875
-.5HH2H28828H287.
-57H882288222887.
-57H88H288288887.
-.7HHH8H22888885.
-.57HHH8H2888875.
-7557HH8H28887...
-...77HHH28877...
-...5.7HHHH7.57..`],
+75H88H28H2888H57
+75HH2H28H28H2857
+75H882288222887.
+.5H88H28H288887.
+7.HHH8H22888885.
+..7HHH8H2888H75.
+7755HH8H28885...
+.7.77HHH28H57...
+7..7.7HHHH5577..`],
   [spacerock, bitmap`
 ................
 ...22222222222..
-..2200000000022.
-.22001111LLL0022
-.20011LLLLLLL002
-.2011LL11LLL1L02
-.201LLL11LLL1102
-.201LLLL1LLL1102
-.201LLLLLLLLLL02
-.201LLLLLL11LL02
-.20LLLLLLL11LL02
-.20L11LLLL11LL02
-.200L1LLLLLLL002
-.2200LLL11110022
-..2200000000022.
+..2211111111122.
+.221LL1111111122
+.21L1LLLL11L1112
+.2LLLLL1LLL11112
+.2LLLLLLL1LL1112
+.2LL1LLLLLL1LL12
+.2L1LLLLLLLLL112
+.2LL1LLL1LLLLL12
+.2LLLLL1L1L1LL12
+.2LLLLLL1LLLLL12
+.2LLLLLLLLLLL1L2
+.22LLLLLLLLLLL22
+..22LLLLLLLLL22.
 ...22222222222..`],
   [blackhole, bitmap`
 ................
@@ -208,16 +208,20 @@ setPushables({
 //---------------controls-------------------------------
 
   onInput("w", () => {
-    getFirst(player).y -=1
+    getFirst(player).y -=1;
+    playTune(moveSound);
   })
 onInput("s", () => {
 	getFirst(player).y += 1
+    playTune(moveSound);
 })
 onInput("a", () => {
   getFirst(player).x -=1
+  playTune(moveSound);
 })
 onInput("d", () => {
   getFirst(player).x +=1
+  playTune(moveSound);
 })
 // ------------ lv reset -------
 onInput("j", () => {
@@ -271,6 +275,12 @@ a.asaa....
 a..apa.aab
 a....a.g.k`,//4
 ];
+const endScreen = [
+ map`
+...
+...
+...`,
+];
 
 setMap(levels[level])
   setBackground("x");
@@ -278,6 +288,16 @@ addText("Lv:" + (level),{
            x:1,
            y:1,
         color: color`8`})
+
+//------------------- music and sounds ------------
+
+const moveSound = tune`
+116.27906976744185: C5/116.27906976744185 + D5-116.27906976744185,
+3604.6511627906975`
+const crysSound = tune`
+130.43478260869566: A5/130.43478260869566,
+130.43478260869566: B5-130.43478260869566,
+3913.0434782608695`
 
 
 //--------------------------------------------
@@ -323,10 +343,11 @@ afterInput(() => {
         let spriteToRemove = getTile(playerPosX, playerPosY).find(sprite => sprite.type === crystal);
         if (spriteToRemove) {
            onInput("i", () => {
+            playTune(crysSound);
             spriteToRemove.remove();
             crystals += 1;
       
-            })
+          })
       }
     }
   
@@ -362,7 +383,13 @@ afterInput(() => {
   if(level==3)
   {
     const maxSteps = 42
-    addText("Steps left:" + (maxSteps - stepCount), { y: 4, color: color`4` });
+    let remainingSteps = maxSteps - stepCount;
+    if( remainingSteps < 10)
+    {
+      remainingSteps = '0' + remainingSteps;
+    }
+    addText("Steps left:" + remainingSteps, { y: 4, color: color`4` });
+    console.log("steps left:" + (maxSteps - stepCount));
     onInput("j", () => {
       stepCount = 0;
     });
@@ -408,7 +435,10 @@ afterInput(() => {
       }
     else {
       clearText();
-      addText("You win!", { y: 4, color: color`6` }); 
+      setMap(endScreen[0]);
+      addText("You win!\n", { y: 4, color: color`6` });
+      addText("Thanks for playing!", { y: 6, color: color`6` });
+      
       }
     }
 
