@@ -292,8 +292,8 @@ a.aa.a.aaa
 as...a....
 asaaaaaaa.
 ....aka.a.
-.a..a.b.a.
-.aa.a..sa.
+.a..a.b?a.
+!aa.a..sa.
 .ba.aaasa.
 aaasaba.s.
 p...a.s...`,//3
@@ -322,7 +322,6 @@ addText("Lv:" + (level),{
            x:1,
            y:1,
         color: color`8`})
-
 //------------------- music and sounds ------------
 
 const moveSound = tune`
@@ -363,6 +362,15 @@ const portalSound = tune`
 144.92753623188406: F5~144.92753623188406,
 144.92753623188406: F5~144.92753623188406,
 4202.898550724638`
+//--------------------------------------------
+let playerPosX;
+let playerPosY;
+let crystals = 0;
+let stepCount = 0;
+let previousX = 0;
+let previousY = 0;
+let gateCoordinates = { x: 0, y: 0 };
+let playerSprite = getFirst(player);
 
 // ------------------------ functions ------------------------------------
 function changeHoleWhenStepped (x, y, changedSprite)
@@ -398,35 +406,23 @@ function stepOnPortal ()
   {
     const onBluePort = tilesWith(blWormhole, player)
     const onRedPort = tilesWith(rdWormhole, player)
-    const rdWormHCord = getFirst(rdWormhole)
-    const blWormHCord = getFirst(blWormhole)
-    if(onRedPort.length >= 1)
+    console.log("red worm:", onRedPort.length)
+    if(onRedPort.length == 1)
     {
-      teleportPlayer(blWormHCord.x, blWormHCord.y);
-      playTune(portalSound);
+      console.log("blue worm:", getFirst(blWormhole).x, getFirst(blWormhole).y)
+      getFirst(player).x = getFirst(blWormhole).x;
+      getFirst(player).y = getFirst(blWormhole).y;
     }
-    if(onBluePort.length >= 1)
+    console.log("blue worm:", onBluePort.length)
+    if(onBluePort.length == 1)
     {
-      teleportPlayer(rdWormHCord.x, rdWormHCord.y);
-      playTune(portalSound);
+      console.log("red worm:", getFirst(rdWormhole).x, getFirst(rdWormhole).y)
+      getFirst(player).x = getFirst(rdWormhole).x;
+      getFirst(player).y = getFirst(rdWormhole).y;
+      console.log("Player's coordinates(x,y):", getFirst(player).x, getFirst(player).y)
     }
   }
-function teleportPlayer(x,y)
-  {
-    let playerSprite = getFirst(player);
-    playerSprite.x = x;
-    playerSprite.y = y;
-  }
 
-//--------------------------------------------
-
-let playerPosX = 0;
-let playerPosY = 0;
-let crystals = 0;
-let stepCount = 0;
-let previousX = 0;
-let previousY = 0;
-let gateCoordinates = { x: 0, y: 0 };
 
 //--------------------after input-------------------------
 
@@ -435,26 +431,26 @@ afterInput(() => {
   
     //console.log("Player's prev coordinates(x,y):", previousX, previousY);
 
-
 ///----------------player position ---------------------
   let playerSprite = getFirst(player);
   previousX = playerPosX;
   previousY = playerPosY;
   playerPosX = playerSprite.x;
   playerPosY = playerSprite.y;
-  console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
+  //console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
   stepCount += 1;
 
 // ----------------change crack to spaceRip and damage handling ------------
   
   changeHoleWhenStepped (previousX,previousY,spacerip);
   const onRip = tilesWith(player, spacerip)
-  if(onRip.length >=1)
+  if(onRip.length ==1)
   {
     playerDeath();
   }  
-// ------------------------- wormholes!!!!!!!!!!!!-----------
 
+// ------------------------- wormholes!!!!!!!!!!!!-----------
+ 
 stepOnPortal();
   
 //------------------ collecting the crystal ---------------
@@ -525,7 +521,7 @@ stepOnPortal();
   //checking if player stepped on a black hole, then restarting the level
   
   const onBlackHole = tilesWith(player, blackhole)
-  if(onBlackHole.length >=1)
+  if(onBlackHole.length ==1)
   {
     playerDeath();
   }
