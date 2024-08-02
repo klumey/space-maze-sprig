@@ -266,14 +266,14 @@ onInput("j", () => {
 let level = 0;
 const levels = [
   map`
-p?..
+p...
 ....
 ....
-..!k`, //0
+...k`, //0
   map`
 p!.
 ...
-.?k`,
+?.k`,
 ];
 const endScreen = [
  map`
@@ -298,8 +298,6 @@ let stepCount = 0;
 let gateCoordinates = { x: 0, y: 0 };
 let onBluePort = { x: 0, y: 0 };
 let onRedPort = { x: 0, y: 0 };
-let rdWormHCord = { x: 0, y: 0 };
-let blWormHCord = { x: 0, y: 0 };
 let playerSprite = getFirst(player)
 
 
@@ -319,21 +317,20 @@ function stepOnPortal ()
   {
     let onBluePort = tilesWith(blWormhole, player)
     let onRedPort = tilesWith(rdWormhole, player)
-    let rdWormHCord = getFirst(rdWormhole)
-    let blWormHCord = getFirst(blWormhole)
-    if(onRedPort.length >= 1)
+    console.log("red worm:", onRedPort.length)
+    if(onRedPort.length == 1)
     {
-      teleportPlayer(blWormHCord.x, blWormHCord.y)
+      //console.log("blue worm:", blWormHCord.x, blWormHCord.y)
+      getFirst(player).x = getFirst(blWormhole).x;
+      getFirst(player).y = getFirst(blWormhole).y;
     }
-    if(onBluePort.length >= 1)
+    console.log("blue worm:", onBluePort.length)
+    if(onBluePort.length == 1)
     {
-      teleportPlayer(rdWormHCord.x, rdWormHCord.y)
+      //console.log("red worm:", rdWormHCord.x, rdWormHCord.y)
+      getFirst(player).x = getFirst(rdWormhole).x;
+      getFirst(player).y = getFirst(rdWormhole).y;
     }
-  }
-function teleportPlayer(x,y)
-  {
-    playerSprite.x = x;
-    playerSprite.y = y;
   }
 
 //--------------------after input-------------------------
@@ -341,7 +338,7 @@ function teleportPlayer(x,y)
 afterInput(() => {
 
   
-    console.log("Player's prev coordinates(x,y):", previousX, previousY);
+    //console.log("Player's prev coordinates(x,y):", previousX, previousY);
 
 
 ///----------------player position ---------------------
@@ -361,9 +358,7 @@ afterInput(() => {
     setMap(levels[level]);
   }
 // ------------------------- wormholes!!!!!!!!!!!!-----------
-  let rdWormHCord = { x: 0, y: 0 };
-  let blWormHCord = { x: 0, y: 0 };
-
+  
 stepOnPortal();
   
 //------------------ collecting the crystal ---------------
