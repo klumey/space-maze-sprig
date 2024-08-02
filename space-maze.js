@@ -26,6 +26,8 @@ k - use an item
     const blackhole = "b"
     const crack = "r"
     const spacerip = "y"
+    const blWormhole = "!"
+    const rdWormhole = "?"
 
 setLegend(
 	[ player, bitmap`
@@ -198,6 +200,40 @@ LLH8757788H0L..0
 L0HHH0L0LLL.....
 LLLLLLL....0LL0.
 L0.........0L...`],
+  [blWormhole, bitmap`
+....2155777.....
+.7.27HH55577.2..
+...25HH55557272.
+...25H5HHH557.7.
+7.71HH555HH57...
+..25555555H51...
+..7255HHH5HL7.7.
+2..755H5H5117.7.
+77.275H555755.2.
+.72577HH555557..
+.777555H55H572..
+.7.55H5555H57...
+..7.5HHHHHH72...
+.77775555777....
+.7..227755.7..7.
+..7....77772....`],
+  [rdWormhole, bitmap`
+....2833888.....
+.8.283333388.2..
+...833993338282.
+..88393399338.8.
+8.88993333938...
+.8239333333388..
+..83333993388.8.
+2..8339339888.8.
+88.2839939833.2.
+.8238839393338..
+.8883333393382..
+.8.3393339338...
+..8.339993382...
+.88883333888....
+.8..228833.8..8.
+..8..8.88882....`],
 )
 setSolids([player,asteroid,gate,spacerock])
 setPushables({
@@ -225,14 +261,11 @@ onInput("d", () => {
 })
 // ------------ lv reset -------
 onInput("j", () => {
-  playTune(nextLvSound);
-    setMap(levels[level])
-  //reset gate coords for every change
-    gateCoordinates = { x: 0, y: 0 };
+  playerDeath();
 });
 
 // ---------------levels/maps ------------------------
-let level = 4;
+let level = 0;
 const levels = [
   map`
 p.
@@ -293,7 +326,7 @@ addText("Lv:" + (level),{
 //------------------- music and sounds ------------
 
 const moveSound = tune`
-117.6470588235294: C4~117.6470588235294 + E4^117.6470588235294,
+117.6470588235294: C4~117.6470588235294,
 3647.0588235294117`
 const crysSound = tune`
 130.43478260869566: A5/130.43478260869566,
@@ -301,9 +334,11 @@ const crysSound = tune`
 3913.0434782608695`
 const deathSound = tune`
 192.30769230769232: F4^192.30769230769232,
+192.30769230769232: G4^192.30769230769232,
+192.30769230769232: F4^192.30769230769232,
 192.30769230769232: E4^192.30769230769232,
 192.30769230769232: D4^192.30769230769232,
-5576.923076923077`
+5192.307692307692`
 const gateOpenSound = tune`
 176.47058823529412: C4-176.47058823529412,
 176.47058823529412: D4-176.47058823529412,
@@ -323,6 +358,11 @@ const winSound = tune `
 153.84615384615384: D5~153.84615384615384 + E5^153.84615384615384,
 153.84615384615384: B4~153.84615384615384 + C5^153.84615384615384,
 4000`
+const portalSound = tune`
+144.92753623188406: B5~144.92753623188406,
+144.92753623188406: F5~144.92753623188406,
+144.92753623188406: F5~144.92753623188406,
+4202.898550724638`
 
 // ------------------------ functions ------------------------------------
 function changeHoleWhenStepped (x, y, changedSprite)
@@ -354,6 +394,29 @@ function playerDeath ()
     playerPosX = playerSprite.x;
     playerPosY = playerSprite.y;
   }
+function stepOnPortal ()
+  {
+    const onBluePort = tilesWith(blWormhole, player)
+    const onRedPort = tilesWith(rdWormhole, player)
+    const rdWormHCord = getFirst(rdWormhole)
+    const blWormHCord = getFirst(blWormhole)
+    if(onRedPort.length >= 1)
+    {
+      teleportPlayer(blWormHCord.x, blWormHCord.y);
+      playTune(portalSound);
+    }
+    if(onBluePort.length >= 1)
+    {
+      teleportPlayer(rdWormHCord.x, rdWormHCord.y);
+      playTune(portalSound);
+    }
+  }
+function teleportPlayer(x,y)
+  {
+    let playerSprite = getFirst(player);
+    playerSprite.x = x;
+    playerSprite.y = y;
+  }
 
 //--------------------------------------------
 
@@ -374,10 +437,9 @@ afterInput(() => {
 
 
 ///----------------player position ---------------------
-  
+  let playerSprite = getFirst(player);
   previousX = playerPosX;
   previousY = playerPosY;
-  let playerSprite = getFirst(player);
   playerPosX = playerSprite.x;
   playerPosY = playerSprite.y;
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
@@ -391,10 +453,12 @@ afterInput(() => {
   {
     playerDeath();
   }  
+// ------------------------- wormholes!!!!!!!!!!!!-----------
+
+stepOnPortal();
+  
 //------------------ collecting the crystal ---------------
 
-  let collectCrystal = tilesWith(player, crystal)
-  let crystalSprite = getAll("c");
   if (playerPosX >= 0 && playerPosY >= 0) {
     //check if tile that player is standing on contains sprite - crystal
         let spriteToRemove = getTile(playerPosX, playerPosY).find(sprite => sprite.type === crystal);
@@ -403,6 +467,7 @@ afterInput(() => {
             playTune(crysSound);
             spriteToRemove.remove();
             crystals += 1;
+             console.log("Crystals:" , crystals);
       
           })
       }
@@ -448,9 +513,6 @@ afterInput(() => {
     }
     addText("Steps left:" + remainingSteps, { y: 4, color: color`4` });
     console.log("steps left:" + (maxSteps - stepCount));
-    onInput("j", () => {
-      stepCount = 0;
-    });
     if( stepCount > maxSteps )
     {
       playerDeath();
