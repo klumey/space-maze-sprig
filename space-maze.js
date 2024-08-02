@@ -225,6 +225,7 @@ onInput("d", () => {
 })
 // ------------ lv reset -------
 onInput("j", () => {
+  playTune(nextLvSound);
     setMap(levels[level])
   //reset gate coords for every change
     gateCoordinates = { x: 0, y: 0 };
@@ -292,12 +293,36 @@ addText("Lv:" + (level),{
 //------------------- music and sounds ------------
 
 const moveSound = tune`
-116.27906976744185: C5/116.27906976744185 + D5-116.27906976744185,
-3604.6511627906975`
+117.6470588235294: C4~117.6470588235294 + E4^117.6470588235294,
+3647.0588235294117`
 const crysSound = tune`
 130.43478260869566: A5/130.43478260869566,
 130.43478260869566: B5-130.43478260869566,
 3913.0434782608695`
+const deathSound = tune`
+192.30769230769232: F4^192.30769230769232,
+192.30769230769232: E4^192.30769230769232,
+192.30769230769232: D4^192.30769230769232,
+5576.923076923077`
+const gateOpenSound = tune`
+176.47058823529412: C4-176.47058823529412,
+176.47058823529412: D4-176.47058823529412,
+176.47058823529412: E4-176.47058823529412,
+5117.64705882353`
+const nextLvSound = tune `
+176.47058823529412: F5^176.47058823529412,
+176.47058823529412: G5^176.47058823529412,
+176.47058823529412: A5^176.47058823529412,
+176.47058823529412: G5^176.47058823529412,
+4941.176470588235`
+const winSound = tune `
+153.84615384615384: B4~153.84615384615384 + C5^153.84615384615384,
+153.84615384615384: C5~153.84615384615384 + D5^153.84615384615384,
+153.84615384615384: E5~153.84615384615384 + F5^153.84615384615384,
+153.84615384615384: C5~153.84615384615384 + D5^153.84615384615384,
+153.84615384615384: D5~153.84615384615384 + E5^153.84615384615384,
+153.84615384615384: B4~153.84615384615384 + C5^153.84615384615384,
+4000`
 
 
 //--------------------------------------------
@@ -368,6 +393,7 @@ afterInput(() => {
       //check if coordinates are only for this map
       if (gateSprite.x === gateCoordinates.x && gateSprite.y === gateCoordinates.y) {
         onInput("k", () => {
+          playTune(gateOpenSound);
           //use new coordinates and clear tile with the gate
           clearTile(gateCoordinates.x, gateCoordinates.y);
           crystals = 0;
@@ -395,6 +421,7 @@ afterInput(() => {
     });
     if( stepCount > maxSteps )
     {
+      playTune(deathSound);
       clearText();
       stepCount = 0;
       setMap(levels[level]);
@@ -413,6 +440,7 @@ afterInput(() => {
   const onBlackHole = tilesWith(player, blackhole)
   if(onBlackHole.length >=1)
   {
+    playTune(deathSound);
     clearText();
     stepCount = 0;
     setMap(levels[level]);
@@ -423,6 +451,7 @@ afterInput(() => {
   if ( onPlanet.length >= 1){ 
     level +=1;
     if (level < levels.length) { 
+      playTune(nextLvSound);
       setMap(levels[level]);
       stepCount = 0;
       clearText();
@@ -434,6 +463,7 @@ afterInput(() => {
       gateCoordinates = { x: 0, y: 0 };
       }
     else {
+      playTune(winSound);
       clearText();
       setMap(endScreen[0]);
       addText("You win!\n", { y: 4, color: color`6` });
