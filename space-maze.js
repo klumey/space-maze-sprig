@@ -232,7 +232,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 0;
+let level = 4;
 const levels = [
   map`
 p.
@@ -265,14 +265,14 @@ asaaaaaaa.
 aaasaba.s.
 p...a.s...`,//3
   map`
-ca....s..a
+ca...rs..a
 .a.aaaa.a.
-.a..a.a.a.
+.ar.a.a.a.
 ...s..a...
 ba.saaa.aa
 aaa.abs...
-a..s.asaa.
-a.asaa....
+a.rs.asaa.
+a.asaa...r
 a..apa.aab
 a....a.g.k`,//4
 ];
@@ -324,19 +324,45 @@ const winSound = tune `
 153.84615384615384: B4~153.84615384615384 + C5^153.84615384615384,
 4000`
 
+// ------------------------ functions ------------------------------------
+function changeHoleWhenStepped (x, y, changedSprite)
+  {
+    if (x >= 0 && y >= 0) {
+    //check if tile that player is standing on contains sprite - crack
+        let crackRemove = getTile(x, y).find(sprite => sprite.type === crack);
+        if (crackRemove) {
+            crackRemove.remove();
+            addSprite(x,y,changedSprite)
+          }
+      }
+  }
+function playerDeath ()
+  {
+    playTune(deathSound);
+    clearText();
+    stepCount = 0;
+    previousX = 0;
+    previousY = 0;
+    crystals = 0;
+    setMap(levels[level]);
+    gateCoordinates = { x: 0, y: 0 };
+    addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})
+    let playerSprite = getFirst(player);
+    playerPosX = playerSprite.x;
+    playerPosY = playerSprite.y;
+  }
 
 //--------------------------------------------
-
-//let previousX = getFirst(player).x
-//let previousY = getFirst(player).y
 
 let playerPosX = 0;
 let playerPosY = 0;
 let crystals = 0;
 let stepCount = 0;
-//let holesCount = 0;
-//let holeX = 0;
-//let holeY = 0;
+let previousX = 0;
+let previousY = 0;
 let gateCoordinates = { x: 0, y: 0 };
 
 //--------------------after input-------------------------
@@ -349,18 +375,24 @@ afterInput(() => {
 
 ///----------------player position ---------------------
   
+  previousX = playerPosX;
+  previousY = playerPosY;
   let playerSprite = getFirst(player);
   playerPosX = playerSprite.x;
   playerPosY = playerSprite.y;
-  //previousX = getFirst(player).x
-  //previousY = getFirst(player).y
   console.log("Player's coordinates(x,y):", playerPosX, playerPosY); 
   stepCount += 1;
 
+// ----------------change crack to spaceRip and damage handling ------------
   
+  changeHoleWhenStepped (previousX,previousY,spacerip);
+  const onRip = tilesWith(player, spacerip)
+  if(onRip.length >=1)
+  {
+    playerDeath();
+  }  
 //------------------ collecting the crystal ---------------
 
-  
   let collectCrystal = tilesWith(player, crystal)
   let crystalSprite = getAll("c");
   if (playerPosX >= 0 && playerPosY >= 0) {
@@ -421,14 +453,7 @@ afterInput(() => {
     });
     if( stepCount > maxSteps )
     {
-      playTune(deathSound);
-      clearText();
-      stepCount = 0;
-      setMap(levels[level]);
-      addText("Lv:" + (level),{
-           x:1,
-           y:1,
-        color: color`8`})
+      playerDeath();
     }
   }
   
@@ -440,10 +465,7 @@ afterInput(() => {
   const onBlackHole = tilesWith(player, blackhole)
   if(onBlackHole.length >=1)
   {
-    playTune(deathSound);
-    clearText();
-    stepCount = 0;
-    setMap(levels[level]);
+    playerDeath();
   }
 
   // check if stepped on a planet - then win screen or proceed to the next level
@@ -471,5 +493,4 @@ afterInput(() => {
       
       }
     }
-
 })
