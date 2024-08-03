@@ -28,9 +28,10 @@ k - use an item
     const spacerip = "y"
     const blWormhole = "!"
     const rdWormhole = "?"
+    const arrowPointDown = "d"
 
 setLegend(
-	[ player, bitmap`
+  [ player, bitmap`
 ................
 ................
 ................
@@ -47,7 +48,7 @@ DD11111L1LLL0004
 ................
 ................
 ................` ],
-    [ space, bitmap`
+  [ space, bitmap`
 0000100000001000
 0000000000010100
 0000000000001000
@@ -234,6 +235,23 @@ L0.........0L...`],
 .88883333888....
 .8..228833.8..8.
 ..8..8.88882....`],
+  [arrowPointDown, bitmap`
+................
+.....66666......
+.....66666......
+.....66666......
+.....66666......
+.....66666......
+.....66666......
+.....66666......
+.6666666666666..
+..66666666666...
+...666666666....
+....6666666.....
+.....66666......
+......666.......
+.......6........
+................`],
 )
 setSolids([player,asteroid,gate,spacerock])
 setPushables({
@@ -259,13 +277,14 @@ onInput("d", () => {
   getFirst(player).x +=1
   playTune(moveSound);
 })
+
 // ------------ lv reset -------
 onInput("j", () => {
   playerDeath();
 });
 
 // ---------------levels/maps ------------------------
-let level = 0;
+let level = 10;
 const levels = [
   map`
 p.
@@ -277,26 +296,50 @@ p.
 ..a..
 pak..`, //1
   map`
-...a.....
-ca...aa..
-aaa.aa..a
-.pa.a...a
-.aa.aaa..
-..a.akaa.
-a...a.g..
-aaa.aaa.a
-.......a.`, //2
+pa.k
+sa.a
+.s..
+.a..`, //2
+  map`
+psss.
+ssss.
+ss...
+.sss.
+s.ska`,//3
+  map`
+..a...
+....ad
+.aa.ac
+...aaa
+aa.aka
+p..g..`,//4
+  map`
+.....ap..a.
+aa.a.aaa.a.
+...a...a...
+.aaaaa.aaa.
+.....a.a.a.
+.aaa.a.a.a.
+.a...a...a.
+.a.aaa.aaa.
+.a.akg.a...
+.a.aaaaa.aa
+ca.........`,//5
+  map`
+..p..
+.aaa.
+.kab.`,//6
   map`
 ..ba...ba.
 a.aa.a.aaa
 as...a....
 asaaaaaaa.
 ....aka.a.
-.a..a.b?a.
-!aa.a..sa.
+.a..a.b.a.
+.aa.a..sa.
 .ba.aaasa.
 aaasaba.s.
-p...a.s...`,//3
+p...a.s...`,//7
   map`
 ca...rs..a
 .a.aaaa.a.
@@ -307,7 +350,48 @@ aaa.abs...
 a.rs.asaa.
 a.asaa...r
 a..apa.aab
-a....a.g.k`,//4
+a....a.g.k`,//8
+  map`
+.g.a.......
+.a..saaaaa.
+ra.a.a.s.a.
+.aaaaaaa.r.
+kaca...aaa.
+aa.a.a.a...
+...aaasr.aa
+.aaa.asaaap
+.a..sa...a.
+.a.a.aaara.
+...a.......`,//9
+  map`
+!ab.k
+.a...
+.a.aa
+pa..?`,//10
+  map`
+a.......a.gk
+a.aaaa..a.aa
+a....a..a.a.
+baaa.a....a.
+.....aaa..a.
+aaaa...a..a.
+..ca...a....
+.aaa.a.aaaaa
+?a...a....a.
+aara.aaa.aa.
+...a..!a....`//11
+ /* map`
+...a.....
+ca...aa..
+aaa.aa..a
+.pa.a...a
+.aa.aaa..
+..a.akaa.
+a...a.g..
+aaa.aaa.a
+.......a.`,*/
+
+ 
 ];
 const endScreen = [
  map`
@@ -328,9 +412,9 @@ const moveSound = tune`
 117.6470588235294: C4~117.6470588235294,
 3647.0588235294117`
 const crysSound = tune`
-130.43478260869566: A5/130.43478260869566,
-130.43478260869566: B5-130.43478260869566,
-3913.0434782608695`
+108.30324909747293: A5/108.30324909747293,
+108.30324909747293: B5-108.30324909747293,
+3249.097472924188`
 const deathSound = tune`
 192.30769230769232: F4^192.30769230769232,
 192.30769230769232: G4^192.30769230769232,
@@ -410,6 +494,7 @@ function stepOnPortal ()
     if(onRedPort.length == 1)
     {
       console.log("blue worm:", getFirst(blWormhole).x, getFirst(blWormhole).y)
+      playTune(portalSound);
       getFirst(player).x = getFirst(blWormhole).x;
       getFirst(player).y = getFirst(blWormhole).y;
     }
@@ -417,6 +502,7 @@ function stepOnPortal ()
     if(onBluePort.length == 1)
     {
       console.log("red worm:", getFirst(rdWormhole).x, getFirst(rdWormhole).y)
+      playTune(portalSound);
       getFirst(player).x = getFirst(rdWormhole).x;
       getFirst(player).y = getFirst(rdWormhole).y;
       console.log("Player's coordinates(x,y):", getFirst(player).x, getFirst(player).y)
@@ -462,6 +548,10 @@ stepOnPortal();
            onInput("i", () => {
             playTune(crysSound);
             spriteToRemove.remove();
+            if(level==4){
+              let arrowRemove = getFirst(arrowPointDown);
+              arrowRemove.remove();
+            }
             crystals += 1;
              console.log("Crystals:" , crystals);
       
@@ -498,10 +588,12 @@ stepOnPortal();
 
   
   //--------------------------Lv 3 - step counter------------------------------
-  
-  if(level==3)
+
+  if(level==6 || level==7 )
   {
-    const maxSteps = 42
+    let maxSteps = 100
+    if (level==7){ maxSteps = 41}
+    if (level==6){ maxSteps = 5}
     let remainingSteps = maxSteps - stepCount;
     if( remainingSteps < 10)
     {
