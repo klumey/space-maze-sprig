@@ -284,7 +284,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 10;
+let level = 0;
 const levels = [
   map`
 p.
@@ -369,17 +369,17 @@ aa.a.a.a...
 .a.aa
 pa..?`,//10
   map`
-a.......a.gk
-a.aaaa..a.aa
-a....a..a.a.
+a.s.....a..b
+a.aaaas.a.aa
+a.r..as.a.ak
 baaa.a....a.
-.....aaa..a.
-aaaa...a..a.
-..ca...a....
+..r..aaa..a.
+aaaaraba..a.
+..ca...ab.g.
 .aaa.a.aaaaa
-?a...a....a.
-aara.aaa.aa.
-...a..!a....`//11
+?a...ar..bap
+aa.araaa.aa.
+!..a..ba....`//11
  /* map`
 ...a.....
 ca...aa..
@@ -391,7 +391,15 @@ a...a.g..
 aaa.aaa.a
 .......a.`,*/
 
- 
+];
+const startScreen = [
+  map`
+......
+......
+......
+......
+......
+......`
 ];
 const endScreen = [
  map`
@@ -400,12 +408,8 @@ const endScreen = [
 ...`,
 ];
 
-setMap(levels[level])
-  setBackground("x");
-addText("Lv:" + (level),{
-           x:1,
-           y:1,
-        color: color`8`})
+
+
 //------------------- music and sounds ------------
 
 const moveSound = tune`
@@ -457,6 +461,7 @@ let gateCoordinates = { x: 0, y: 0 };
 let playerSprite = getFirst(player);
 
 // ------------------------ functions ------------------------------------
+
 function changeHoleWhenStepped (x, y, changedSprite)
   {
     if (x >= 0 && y >= 0) {
@@ -508,6 +513,50 @@ function stepOnPortal ()
       console.log("Player's coordinates(x,y):", getFirst(player).x, getFirst(player).y)
     }
   }
+
+// -------------------- start screen -------------------------
+setMap(startScreen[0])
+  setBackground("x");
+/*addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})*/
+addText("Welcome! ",
+            {
+              x:6,
+              y:1,
+              color: color`6`
+            })
+addText( "Tip - press:",
+            {
+              x:4,
+              y:3,
+              color: color`6`
+            })
+addText( "i: collect\n crystals",
+            {
+              x:3,
+              y:5,
+              color: color`6`
+            })
+addText( "k: use\n crystal",
+            {
+              x:3,
+              y:8,
+              color: color`6`
+            })
+addText( "w,s,a,d: move",
+            {
+              x:3,
+              y:11,
+              color: color`6`
+            })
+addText( "\nj: Start playing!!",
+            {
+              x:1,
+              y:12,
+              color: color`6`
+            })
 
 
 //--------------------after input-------------------------
@@ -640,7 +689,7 @@ stepOnPortal();
       setMap(endScreen[0]);
       addText("You win!\n", { y: 4, color: color`6` });
       addText("Thanks for playing!", { y: 6, color: color`6` });
-      
+      addText("Made by: klumey", {y:8, color: color`6` });
       }
     }
 })
