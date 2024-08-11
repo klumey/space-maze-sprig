@@ -29,6 +29,7 @@ k - use an item
     const blWormhole = "!"
     const rdWormhole = "?"
     const arrowPointDown = "d"
+    const fakePlanet = "f"
 
 setLegend(
   [ player, bitmap`
@@ -85,19 +86,19 @@ DD11111L1LLL0004
   [planet, bitmap`
 ................
 .....933C3C.....
-...99399333CC...
-..6669939933CC..
-.6999999939333C.
-.66996693333C3C.
+...9939933CCC...
+..6669939333CC..
+.699999993933CC.
+.6699669333333C.
 .996669999393CC.
 .6696993339933C.
-.669999999333CC.
+.66999999933CCC.
 .999996999939CC.
-.6669969939933C.
-.699969333333CC.
-..6699999993CC..
-...699966933C...
-....66633C3C....
+.6669969939333C.
+.69996933333CCC.
+..66999999C33C..
+...69996693CC...
+....66633CCC....
 ................` ],
   [gate, bitmap`
 .....269CC2.....
@@ -252,6 +253,23 @@ L0.........0L...`],
 ......666.......
 .......6........
 ................`],
+  [fakePlanet, bitmap`
+................
+.....933333.....
+...9939933333...
+..666993993333..
+.69999999393333.
+.66996693333333.
+.99666999939333.
+.66969933399333.
+.66999999933333.
+.99999699993933.
+.66699699399333.
+.69996933333333.
+..669999999333..
+...6999669333...
+....66633333....
+................` ],
 )
 setSolids([player,asteroid,gate,spacerock])
 setPushables({
@@ -379,7 +397,88 @@ aaaaraba..a.
 .aaa.a.aaaaa
 ?a...ar..bap
 aa.araaa.aa.
-!..a..ba....`//11
+!..a..ba....`,//11
+  map `
+.r.gka!.
+.aaaaaa.
+.?a...a.
+aaa.a.s.
+....a...
+.aaaaaa.
+.a....a.
+..saa.ac
+.s.ap.ab`,//12
+  map`
+.....r.c.
+.aaaaaaar
+....sb.a!
+.aaa.aaaa
+..fa.akg.
+.aaa.aaa.
+.a?.sa...
+.aaa...a.
+..pa..ba.`,//13
+  map`
+.p.
+d..
+k.f`,//14
+  map`
+p..a......ab.b
+aa.a.aaaa.a...
+...a....a.r.af
+s.aaa.a.aaaaaa
+...r..a.a.....
+.aaaaaa.a.aaas
+.a..afa...afs.
+raf.a.aaaaa..b
+.ss......fa.aa
+b..ab....ba..k`, //15
+  map`
+..faf.r....a...
+...aaaa..a.aaa.
+fa.a.....a.a...
+aara..aa.a...a.
+...aa..aaaaaaa.
+.a...ss..ba.s..
+.a.aaaaaaaa.saa
+.afa....pa...a.
+.aaa.aaaaa.aaa.
+.....a...a...a.
+raaaaa.a..aa...
+.a...a.aa....aa
+ba.s...ra..aak.
+aa.aaaa.araf...
+c..r.faba.g...b`, //16
+  map`
+.pa...a....a.....
+.ab.a.a.ba.a.baa.
+....a....a.a.a...
+aaaaaaaa.a.a.a.aa
+...s...a.a...a...
+..aaaa.aaaaaaa.a.
+.af.ra.......a.a.
+.aaa..raaaaa.aab.
+...aaaaa?a.ss....
+sa....ab...aaaaa.
+..aab.aaaaaa...a.
+...a..a...a..as.b
+aa.a.aa.a.a.aa...
+...a....a.a..aaar
+raaaaaaaa.aa.b...
+.a.......r!a.ak..
+.b.aaaabaaaa.aaaa
+fa...............`,//17
+  map`
+..........
+.p.sss....
+..s...ss..
+.ss..sss..
+s.s...ss..
+s.s.k.s...
+s.s...s...
+.ss.s.s...
+...s.s....
+..........`,//18
  /* map`
 ...a.....
 ca...aa..
@@ -551,7 +650,7 @@ addText( "w,s,a,d: move",
               y:11,
               color: color`6`
             })
-addText( "\nj: Start playing!!",
+addText( "\nj: Start playing!!\n   (reset level)",
             {
               x:1,
               y:12,
@@ -589,7 +688,15 @@ afterInput(() => {
 stepOnPortal();
   
 //------------------ collecting the crystal ---------------
-
+  if (level==14)
+  {
+    addText( "Choose the real one",
+            {
+              x:1,
+              y:4,
+              color: color`7`
+            })
+  }
   if (playerPosX >= 0 && playerPosY >= 0) {
     //check if tile that player is standing on contains sprite - crystal
         let spriteToRemove = getTile(playerPosX, playerPosY).find(sprite => sprite.type === crystal);
@@ -638,11 +745,12 @@ stepOnPortal();
   
   //--------------------------Lv 3 - step counter------------------------------
 
-  if(level==6 || level==7 )
+  if(level==6 || level==7 || level==17)
   {
     let maxSteps = 100
     if (level==7){ maxSteps = 41}
     if (level==6){ maxSteps = 5}
+    if (level==17){ maxSteps = 133}
     let remainingSteps = maxSteps - stepCount;
     if( remainingSteps < 10)
     {
@@ -657,7 +765,11 @@ stepOnPortal();
   }
   
 //------------------------------------------------------------
-
+  const onFake = tilesWith(player, fakePlanet)
+    if(onFake.length ==1)
+    {
+      playerDeath();
+    }
   
   //checking if player stepped on a black hole, then restarting the level
   
@@ -688,8 +800,8 @@ stepOnPortal();
       clearText();
       setMap(endScreen[0]);
       addText("You win!\n", { y: 4, color: color`6` });
-      addText("Thanks for playing!", { y: 6, color: color`6` });
-      addText("Made by: klumey", {y:8, color: color`6` });
+      addText("Thanks for playing!", { y: 8, color: color`6` });
+      addText("Made by: klumey", {y:10, color: color`6` });
       }
     }
 })
