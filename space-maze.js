@@ -303,7 +303,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 18;
+let level = 0;
 const levels = [
   map`
 p.
@@ -483,16 +483,6 @@ fa...............`,//17
 .ccc.ccc.c..
 ...c.c.c.c..
 ...ccc.ccc..`,//18
- /* map`
-...a.....
-ca...aa..
-aaa.aa..a
-.pa.a...a
-.aa.aaa..
-..a.akaa.
-a...a.g..
-aaa.aaa.a
-.......a.`,*/
 
 ];
 const startScreen = [
