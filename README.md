@@ -1,5 +1,5 @@
-# Space maze using Sprig /Still WIP!!
-game available on: sprig.hackclub.com/share/laElSchGPrkd5g4tUZL2
+# Space maze using Sprig 
+game available on: [sprig.hackclub.com/share/laElSchGPrkd5g4tUZL2](https://sprig.hackclub.com/share/x9uMW0WdTAsBxBiIhwM1)
 
 During the process of creating this game, I learnt a lot of new things. It is my first time coding in JS, and I'm no programming expert (only used to code some algorithms in C++).
 Making all of this has been and will be a lot of fun and a great experience for me. 
