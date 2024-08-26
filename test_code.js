@@ -441,7 +441,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 0;
+let level = 6;
 const levels = [
   map`
 z.
@@ -449,7 +449,7 @@ z.
   map`
 l...
 ....
-q..i`, // 1 - planet
+q..i`, // 1     - planet
   map`
 .aa..
 .....
@@ -460,7 +460,7 @@ zak..`, //2 - space
 lei..
 .e.q.
 ..ee.
-..q..`, // 3 - planet
+..q..`, // 3     - planet
   map`
 za.k
 sa.a
@@ -471,22 +471,39 @@ leeei
 q.qe.
 ...j.
 q.qe.
-.e...`, //5 - planet
+.e...`, //5    - planet
   map`
 zsss.
 ssss.
 ss...
 .sss.
 s.ska`,//6 - space 
-  map`.`,
+  map`
+lje.q.qjeji
+.qej.e..eq.
+j.e..ejqe.j
+q.eqje..e.q
+.je..e.jej.
+.qej.eq.e..
+j.e.qej.e.j
+..q.je.q.q.`,//7     - planet
   map`
 ..a...
 ....ad
 .aa.ac
 ...aaa
 aa.aka
-p..g..`,//4 - space 
-  map`.`,
+z..g..`,//8 - space 
+  map`
+.l...q..j
+jejejej..
+eq...q...
+..jejejej
+...q...qe
+ejejeje..
+j.q...q..
+..ejejeje
+q...q..qi`,//9     - planet
   map`
 .....az..a.
 aa.a.aaa.a.
@@ -498,8 +515,16 @@ aa.a.aaa.a.
 .a.aaa.aaa.
 .a.akg.a...
 .a.aaaaa.aa
-ca.........`,//5 - space 
-  map`.`,
+ca.........`,//10 - space 
+  map`
+...qeej.l
+.q....e..
+...q...e.
+.q...q.e.
+......ie.
+..q.q.ej.
+q.....e..
+..q.e....`,//11    - planet
   map`
 ..z..
 .aaa.
@@ -557,7 +582,7 @@ baaa.a....a.
 aaaaraba..a.
 ..ca...ab.g.
 .aaa.a.aaaaa
-?a...ar..bap
+?a...ar..baz
 aa.araaa.aa.
 !..a..ba....`,//11 - space 
   map`.`,
@@ -570,10 +595,10 @@ aaa.a.s.
 .aaaaaa.
 .a....a.
 ..saa.ac
-.s.ap.ab`,//12 - space 
+.s.az.ab`,//12 - space 
   map`.`,
   map`
-.p.
+.i.
 d..
 kaf`,//13 - space 
   map`.`,
@@ -586,7 +611,7 @@ kaf`,//13 - space
 .aaa.aaa.
 .a?.sa...
 .aaa...a.
-..pa..baf`,//14 - space 
+..za..baf`,//14 - space 
   map`.`,
   map`
 z..a......ab.b
@@ -608,7 +633,7 @@ aara..aa.a...a.
 ...aa..aaaaaaa.
 .a...ss..ba.s..
 .a.aaaaaaaa.saa
-.afa....pa...a.
+.afa....za...a.
 .aaa.aaaaa.aaa.
 .....a...a...a.
 raaaaa.a..aa...
@@ -723,7 +748,8 @@ let previousX = 0;
 let previousY = 0;
 let gateCoordinates = { x: 0, y: 0 };
 let shipSprite = getFirst(ship);
-let cows = 0;
+let cowsFinal = 0; 
+let cowsCurrent = 0;
 
 // ------------------------ functions ------------------------------------
 
@@ -746,6 +772,7 @@ function playerDeath ()
     previousX = 0;
     previousY = 0;
     crystals = 0;
+    cowsCurrent = 0;
     setMap(levels[level]);
     gateCoordinates = { x: 0, y: 0 };
     if(level%2 != 0)
@@ -753,7 +780,7 @@ function playerDeath ()
       addText("Lv:" + (level),{
            x:1,
            y:1,
-        color: color`7`})
+        color: color`5`})
       let alienSprite = getFirst(alien);
     alienPosX = alienSprite.x;
     alienPosY = alienSprite.y;
@@ -774,22 +801,22 @@ function stepOnPortal ()
   {
     const onBluePort = tilesWith(blWormhole, ship)
     const onRedPort = tilesWith(rdWormhole, ship)
-    console.log("red worm:", onRedPort.length)
+    //console.log("red worm:", onRedPort.length)
     if(onRedPort.length == 1)
     {
-      console.log("blue worm:", getFirst(blWormhole).x, getFirst(blWormhole).y)
+      //console.log("blue worm:", getFirst(blWormhole).x, getFirst(blWormhole).y)
       playTune(portalSound);
       getFirst(ship).x = getFirst(blWormhole).x;
       getFirst(ship).y = getFirst(blWormhole).y;
     }
-    console.log("blue worm:", onBluePort.length)
+    //console.log("blue worm:", onBluePort.length)
     if(onBluePort.length == 1)
     {
-      console.log("red worm:", getFirst(rdWormhole).x, getFirst(rdWormhole).y)
+      //console.log("red worm:", getFirst(rdWormhole).x, getFirst(rdWormhole).y)
       playTune(portalSound);
       getFirst(ship).x = getFirst(rdWormhole).x;
       getFirst(ship).y = getFirst(rdWormhole).y;
-      console.log("ship's coordinates(x,y):", getFirst(ship).x, getFirst(ship).y)
+      //console.log("ship's coordinates(x,y):", getFirst(ship).x, getFirst(ship).y)
     }
   }
 
@@ -862,8 +889,9 @@ afterInput(() => {
               let arrowRemove = getFirst(arrowPointDown);
               arrowRemove.remove();
             }*/
-            cows += 1;
-             console.log("Cows:" , cows);
+            cowsCurrent += 1;
+             console.log("Cows this Lv:" , cowsCurrent);
+          console.log("Cows fin:" , cowsFinal);
       
       }
     }
@@ -880,6 +908,8 @@ afterInput(() => {
       playTune(nextLvSound);
       setMap(levels[level]);
       setBackground("x");
+      cowsFinal += cowsCurrent;
+      cowsCurrent = 0;
       stepCount = 0;
       clearText();
       addText("Lv:" + (level),{
@@ -938,7 +968,7 @@ stepOnPortal();
            onInput("i", () => {
             playTune(crysSound);
             spriteToRemove.remove();
-            if(level==4){
+            if(level==8){
               let arrowRemove = getFirst(arrowPointDown);
               arrowRemove.remove();
             }
@@ -1026,7 +1056,7 @@ stepOnPortal();
       addText("Lv:" + (level),{
            x:1,
            y:1,
-        color: color`7`})
+        color: color`5`})
       //reset the gate coordinates after changing map
       gateCoordinates = { x: 0, y: 0 };
       }
