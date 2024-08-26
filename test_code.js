@@ -18,6 +18,8 @@ k - use an item
 
 // ------------objects and bitmaps ------------
     let player = '';
+    const shipGoal = "i"
+    const fence = "e"
     const ship = "z"
     const alien = "l"
     const space = "x"
@@ -35,6 +37,7 @@ k - use an item
     const fakePlanet = "f"
     const groundBg = "h"
     const cow = "q"
+    const house = "j"
     const alienPic = bitmap`
 ................
 ................
@@ -69,6 +72,23 @@ DD11111L1LLL0004
 ................
 ................`;
 setLegend(
+  [shipGoal, bitmap`
+................
+................
+....DD444DD.....
+...DD111L0D4....
+.4DD41111LLD4...
+4DL1D141414L4D4.
+D11L11D1D1L000DD
+4111LLLLLLLLL004
+DD11111L1LLL0004
+.44DLLLLLL000DDD
+...DDDD44D4DDD..
+.....4DDD4......
+....4DD4D4D.....
+....4D444D4.....
+...D4D4D4D4D....
+................`],
   [ ship, shipPic],
   [ alien, alienPic],
   [ space, bitmap`
@@ -293,41 +313,75 @@ L0.........0L...`],
 ....66633333....
 ................` ],
   [ groundBg, bitmap`
-6666666666696666
-6996966966669666
-9996669666696966
-6999669699666666
-9699666699966669
-6669666696966696
-6666669666666696
-6666699966699666
-6966696966699666
-9666666666999966
-6669666696966696
-6669966666966696
-6669966666666666
-6699696669966666
-6696699696666666
-6666666696966666` ],
+8888888888888888
+8688888888888688
+8898888688888988
+8888888988888898
+8888889888688888
+8866888888968888
+8868888888898888
+8898888888888888
+8988888688888868
+8888888688888868
+8888889888688988
+8898888988888888
+8888888888868888
+8886888888889888
+8898888688888888
+8888888888888888` ],
   [ cow, bitmap`
 ................
 ................
-................
-...........22020
-..........22022.
-.....200220222C.
-..00022200002228
-.200002220000028
-020002222220....
-0.2222220022....
-0..028820220....
-...22.8...20....
-...22.....22....
-...0.......0....
-................
+..........1111..
+.........1122F1.
+....11111122021.
+.111120022022C1.
+1100022200002281
+1200002220000081
+120002222220111.
+0122222200221...
+0110288202201...
+1.12218111201...
+..122111.1221...
+..101....1101...
+..111.....11....
 ................` ],
+  [fence, bitmap`
+.CCC..........C.
+CCFFC......CCCCC
+CF1FFC...CCCFFCC
+CCFFFFCCCCCFF1FC
+.CFFFFFCCCFFFFFC
+..CFFCCCFCCFFFCC
+...CCCFFFFCFFCC.
+..CCCCFFFFCCCC..
+.CCCFCCFFFCCC...
+CCCFFCCCFFCCFCC.
+CFFFFFCCCCCFFFCC
+CFFFFFCCCCFFFFFC
+FF1FFCCC.CCFF1FC
+CFFFCC....CCFFFC
+.CCC.......CCFFC
+............CCC.`],
+  [house, bitmap`
+................
+................
+................
+...CC.333C......
+...CC33333C.....
+...CC33333CC....
+..3333333CCCCC..
+.33333CCCCCCCC..
+.3CCCCCCCCCCCCC.
+...2221211211...
+...2752222751...
+...2772221771...
+...2752CC2751...
+...2222FC2111...
+...2212CC1211...
+................`],
 )
-setSolids([ship,alien,asteroid,gate,spacerock])
+setSolids([ship,alien,asteroid,gate,spacerock,fence])
 setPushables({
     [ spacerock ]: [spacerock],
 	[ alien ]: [spacerock],
@@ -337,7 +391,7 @@ setPushables({
 //---------------controls-------------------------------
 
   onInput("w", () => {
-    if (player == alien) {
+    if (level%2 != 0) {
       getFirst(alien).y -= 1;
       alienY = getFirst(alien).y;
     }
@@ -348,7 +402,7 @@ setPushables({
     playTune(moveSound);
   })
 onInput("s", () => {
-	if (player == alien) {
+	if (level%2 != 0) {
       getFirst(alien).y += 1;
       alienY = getFirst(alien).y;
     }
@@ -359,7 +413,7 @@ onInput("s", () => {
     playTune(moveSound);
 })
 onInput("a", () => {
-  if (player == alien) {
+  if (level%2 != 0) {
       getFirst(alien).x -= 1;
       alienY = getFirst(alien).x;
     }
@@ -370,7 +424,7 @@ onInput("a", () => {
   playTune(moveSound);
 })
 onInput("d", () => {
-  if (player == alien) {
+  if (level%2 != 0) {
       getFirst(alien).x += 1;
       alienY = getFirst(alien).x;
     }
@@ -395,24 +449,36 @@ z.
   map`
 l...
 ....
-q..z`,
+q..i`, // 1 - planet
   map`
 .aa..
 .....
 ...a.
 ..a..
-zak..`, //1 - space 
+zak..`, //2 - space 
+  map`
+lei..
+.e.q.
+..ee.
+..q..`, // 3 - planet
   map`
 za.k
 sa.a
 .s..
-.a..`, //2  - space 
+.a..`, //4  - space 
+  map`
+leeei
+q.qe.
+...j.
+q.qe.
+.e...`, //5 - planet
   map`
 zsss.
 ssss.
 ss...
 .sss.
-s.ska`,//3 - space 
+s.ska`,//6 - space 
+  map`.`,
   map`
 ..a...
 ....ad
@@ -420,6 +486,7 @@ s.ska`,//3 - space
 ...aaa
 aa.aka
 p..g..`,//4 - space 
+  map`.`,
   map`
 .....az..a.
 aa.a.aaa.a.
@@ -432,10 +499,12 @@ aa.a.aaa.a.
 .a.akg.a...
 .a.aaaaa.aa
 ca.........`,//5 - space 
+  map`.`,
   map`
 ..z..
 .aaa.
 .kab.`,//6 - space
+  map`.`,
   map`
 ..ba...ba.
 a.aa.a.aaa
@@ -447,6 +516,7 @@ asaaaaaaa.
 .ba.aaasa.
 aaasaba.s.
 z...a.s...`,//7 - space 
+  map`.`,
   map`
 ca...rs..a
 .a.aaaa.a.
@@ -458,6 +528,7 @@ a.rs.asaa.
 a.asaa...r
 a..aza.aab
 a....a.g.k`,//8 - space 
+  map`.`,
   map`
 .g.a.......
 .a..saaaaa.
@@ -470,11 +541,13 @@ aa.a.a.a...
 .a..sa...a.
 .a.a.aaara.
 ...a.......`,//9 - space 
+  map`.`,
   map`
 !ab.k
 .a...
 .a.aa
 za..?`,//10 - space 
+  map`.`,
   map`
 a.s.....a..b
 a.aaaas.a.aa
@@ -487,6 +560,7 @@ aaaaraba..a.
 ?a...ar..bap
 aa.araaa.aa.
 !..a..ba....`,//11 - space 
+  map`.`,
   map `
 .r.gka!.
 .aaaaaa.
@@ -497,10 +571,12 @@ aaa.a.s.
 .a....a.
 ..saa.ac
 .s.ap.ab`,//12 - space 
+  map`.`,
   map`
 .p.
 d..
 kaf`,//13 - space 
+  map`.`,
   map`
 .....r.c.
 .aaaaaaar
@@ -511,6 +587,7 @@ kaf`,//13 - space
 .a?.sa...
 .aaa...a.
 ..pa..baf`,//14 - space 
+  map`.`,
   map`
 z..a......ab.b
 aa.a.aaaa.a...
@@ -522,6 +599,7 @@ s.aaa.a.aaaaaa
 raf.a.aaaaa..b
 .ss......fa.aa
 b..ab....ba..k`, //15 - space 
+  map`.`,
   map`
 ..faf.r....a...
 ...aaaa..a.aaa.
@@ -538,6 +616,7 @@ raaaaa.a..aa...
 ba.s...ra..aak.
 aa.aaaa.araf...
 c..r.faba.g...b`, //16 - space 
+  map`.`,
   map`
 .za...a....a.....
 .ab.a.a.ba.a.baa.
@@ -557,6 +636,7 @@ raaaaaaaa.aa.b...
 .a.......r!a.ak..
 .b.aaaabaaaa.aaaa
 fa...............`,//17 - space 
+  map`.`,
   map`
 ............
 ............
@@ -635,24 +715,18 @@ const portalSound = tune`
 //--------------------------------------------
 let shipPosX;
 let shipPosY;
+let alienPosX;
+let alienPosY;
 let crystals = 0;
 let stepCount = 0;
 let previousX = 0;
 let previousY = 0;
 let gateCoordinates = { x: 0, y: 0 };
 let shipSprite = getFirst(ship);
+let cows = 0;
 
 // ------------------------ functions ------------------------------------
-function changeEnvtoPlanet ()
-  {
-    player = alien;
-    setBackground("h");
-  }
-function changeEnvtoSpace ()
-  {
-    player = ship;
-    setBackground("x");
-  }
+
 function changeHoleWhenStepped (x, y, changedSprite)
   {
     if (x >= 0 && y >= 0) {
@@ -674,16 +748,27 @@ function playerDeath ()
     crystals = 0;
     setMap(levels[level]);
     gateCoordinates = { x: 0, y: 0 };
-    addText("Lv:" + (level),{
+    if(level%2 != 0)
+    {
+      addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`7`})
+      let alienSprite = getFirst(alien);
+    alienPosX = alienSprite.x;
+    alienPosY = alienSprite.y;
+    }
+    if(level%2 == 0)
+    {
+      addText("Lv:" + (level),{
            x:1,
            y:1,
         color: color`8`})
-    let alienSprite = getFirst(alien);
-    alienPosX = alienSprite.x;
-    alienPosY = alienSprite.y;
-    let shipSprite = getFirst(ship);
+      let shipSprite = getFirst(ship);
     shipPosX = shipSprite.x;
     shipPosY = shipSprite.y;
+    }
+    
   }
 function stepOnPortal ()
   {
@@ -757,15 +842,59 @@ addText( "\nj: Start playing!!\n   (reset level)",
 //--------------------after input-------------------------
 
 afterInput(() => {
+
+// -------------- level with alien ------------------
   if(level%2 != 0)
   {
     let alienSprite = getFirst(alien);
-  previousX = alienPosX;
-  previousY = alienPosY;
-  alienPosX = alienSprite.x;
-  alienPosY = alienSprite.y;
-  stepCount += 1;
+    previousX = alienPosX;
+    previousY = alienPosY;
+    alienPosX = alienSprite.x;
+    alienPosY = alienSprite.y;
+    stepCount += 1;
+    if (alienPosX >= 0 && alienPosY >= 0) {
+    //check if tile that alien is standing on contains sprite - cow
+        let spriteToRemove = getTile(alienPosX, alienPosY).find(sprite => sprite.type === cow);
+        if (spriteToRemove) {
+            //playTune(crysSound);
+            spriteToRemove.remove();
+            /*if(level==4){
+              let arrowRemove = getFirst(arrowPointDown);
+              arrowRemove.remove();
+            }*/
+            cows += 1;
+             console.log("Cows:" , cows);
+      
+      }
+    }
+    const onHouse = tilesWith(alien, house)
+    if(onHouse.length ==1)
+    {
+      playerDeath();
+    }
+    // ------------------------------ win!!!!! --------------
+    const  onShip = tilesWith(shipGoal, alien)
+  if ( onShip.length >= 1){ 
+    level +=1;
+    if (level < levels.length) { 
+      playTune(nextLvSound);
+      setMap(levels[level]);
+      setBackground("x");
+      stepCount = 0;
+      clearText();
+      addText("Lv:" + (level),{
+           x:1,
+           y:1,
+        color: color`8`})
+      //reset the gate coordinates after changing map
+      gateCoordinates = { x: 0, y: 0 };
+      }
+    }
   }
+
+
+  
+// --------------------------- level with ship ---------------------------
  if(level%2 == 0) 
  { 
     //console.log("ship's prev coordinates(x,y):", previousX, previousY);
@@ -850,12 +979,12 @@ stepOnPortal();
   
   //--------------------------Lv 3 - step counter------------------------------
 
-  if(level==6 || level==7 || level==17)
+  if(level==12 || level==14 || level==34)
   {
     let maxSteps = 100
-    if (level==7){ maxSteps = 41}
-    if (level==6){ maxSteps = 5}
-    if (level==17){ maxSteps = 133}
+    if (level==14){ maxSteps = 41}
+    if (level==12){ maxSteps = 5}
+    if (level==34){ maxSteps = 133}
     let remainingSteps = maxSteps - stepCount;
     if( remainingSteps < 10)
     {
@@ -897,7 +1026,7 @@ stepOnPortal();
       addText("Lv:" + (level),{
            x:1,
            y:1,
-        color: color`8`})
+        color: color`7`})
       //reset the gate coordinates after changing map
       gateCoordinates = { x: 0, y: 0 };
       }
