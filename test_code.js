@@ -38,6 +38,7 @@ k - use an item
     const groundBg = "h"
     const cow = "q"
     const house = "j"
+    const apple = "o"
     const alienPic = bitmap`
 ................
 ................
@@ -91,6 +92,23 @@ DD11111L1LLL0004
 ................`],
   [ ship, shipPic],
   [ alien, alienPic],
+  [ apple, bitmap`
+.......C........
+......CC..D4....
+......C.DD44....
+......CDD44.....
+...6693CD433....
+..69999333333...
+..96333333223...
+..99333333323...
+..69393333333...
+..93333333323...
+..99333333333...
+...9393333333...
+...333333333....
+.....33333......
+................
+................`],
   [ space, bitmap`
 0000100000001000
 0000000000010100
@@ -391,7 +409,8 @@ setPushables({
 //---------------controls-------------------------------
 
   onInput("w", () => {
-    if (level%2 != 0) {
+    const alienSprite = getFirst(alien)
+    if (alienSprite) {
       getFirst(alien).y -= 1;
       alienY = getFirst(alien).y;
     }
@@ -402,7 +421,8 @@ setPushables({
     playTune(moveSound);
   })
 onInput("s", () => {
-	if (level%2 != 0) {
+    const alienSprite = getFirst(alien)
+	if (alienSprite) {
       getFirst(alien).y += 1;
       alienY = getFirst(alien).y;
     }
@@ -413,7 +433,8 @@ onInput("s", () => {
     playTune(moveSound);
 })
 onInput("a", () => {
-  if (level%2 != 0) {
+   const alienSprite = getFirst(alien)
+  if (alienSprite) {
       getFirst(alien).x -= 1;
       alienY = getFirst(alien).x;
     }
@@ -424,7 +445,8 @@ onInput("a", () => {
   playTune(moveSound);
 })
 onInput("d", () => {
-  if (level%2 != 0) {
+   const alienSprite = getFirst(alien)
+  if (alienSprite) {
       getFirst(alien).x += 1;
       alienY = getFirst(alien).x;
     }
@@ -441,7 +463,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 6;
+let level = 8;
 const levels = [
   map`
 z.
@@ -479,14 +501,14 @@ ss...
 .sss.
 s.ska`,//6 - space 
   map`
-lje.q.qjeji
+ljeoq.qjeji
 .qej.e..eq.
 j.e..ejqe.j
 q.eqje..e.q
 .je..e.jej.
 .qej.eq.e..
 j.e.qej.e.j
-..q.je.q.q.`,//7     - planet
+o.q.je.q.qo`,//7     - planet
   map`
 ..a...
 ....ad
@@ -496,12 +518,12 @@ aa.aka
 z..g..`,//8 - space 
   map`
 .l...q..j
-jejejej..
+jejejej.o
 eq...q...
 ..jejejej
-...q...qe
+o..q...qe
 ejejeje..
-j.q...q..
+j.q...q.o
 ..ejejeje
 q...q..qi`,//9     - planet
   map`
@@ -519,17 +541,26 @@ ca.........`,//10 - space
   map`
 ...qeej.l
 .q....e..
-...q...e.
+o..q.o.e.
 .q...q.e.
 ......ie.
 ..q.q.ej.
 q.....e..
-..q.e....`,//11    - planet
+.oq.e....`,//11    - planet
   map`
 ..z..
 .aaa.
-.kab.`,//6 - space
-  map`.`,
+.kab.`,//12 - space
+  map`
+.....j...j
+lj........
+eeeeeeee..
+q...q....o
+..q....ej.
+......qeo.
+o......e..
+j..q...ej.
+......qei.`,//13    - planet
   map`
 ..ba...ba.
 a.aa.a.aaa
@@ -540,8 +571,15 @@ asaaaaaaa.
 .aa.a..sa.
 .ba.aaasa.
 aaasaba.s.
-z...a.s...`,//7 - space 
-  map`.`,
+z...a.s...`,//14 - space 
+  map`
+l........
+...q.o.q.
+.........
+q..q....q
+.......o.
+q.....q..
+.o..q...i`,//15     - planet
   map`
 ca...rs..a
 .a.aaaa.a.
@@ -552,8 +590,18 @@ aaa.abs...
 a.rs.asaa.
 a.asaa...r
 a..aza.aab
-a....a.g.k`,//8 - space 
-  map`.`,
+a....a.g.k`,//16 - space 
+  map`
+l......j
+ejeejeo.
+q....oe.
+...q.ej.
+....ej..
+o.......
+.qe..q..
+.ej....o
+eeeeeej.
+i.......`,//17    -planet
   map`
 .g.a.......
 .a..saaaaa.
@@ -565,13 +613,13 @@ aa.a.a.a...
 .aaa.asaaaz
 .a..sa...a.
 .a.a.aaara.
-...a.......`,//9 - space 
+...a.......`,//18 - space 
   map`.`,
   map`
 !ab.k
 .a...
 .a.aa
-za..?`,//10 - space 
+za..?`,//20 - space 
   map`.`,
   map`
 a.s.....a..b
@@ -584,7 +632,7 @@ aaaaraba..a.
 .aaa.a.aaaaa
 ?a...ar..baz
 aa.araaa.aa.
-!..a..ba....`,//11 - space 
+!..a..ba....`,//22 - space 
   map`.`,
   map `
 .r.gka!.
@@ -595,12 +643,12 @@ aaa.a.s.
 .aaaaaa.
 .a....a.
 ..saa.ac
-.s.az.ab`,//12 - space 
+.s.az.ab`,//24 - space 
   map`.`,
   map`
 .i.
 d..
-kaf`,//13 - space 
+kaf`,//26 - space 
   map`.`,
   map`
 .....r.c.
@@ -611,7 +659,7 @@ kaf`,//13 - space
 .aaa.aaa.
 .a?.sa...
 .aaa...a.
-..za..baf`,//14 - space 
+..za..baf`,//28 - space 
   map`.`,
   map`
 z..a......ab.b
@@ -623,7 +671,7 @@ s.aaa.a.aaaaaa
 .a..afa...afs.
 raf.a.aaaaa..b
 .ss......fa.aa
-b..ab....ba..k`, //15 - space 
+b..ab....ba..k`, //30 - space 
   map`.`,
   map`
 ..faf.r....a...
@@ -640,7 +688,7 @@ raaaaa.a..aa...
 .a...a.aa....aa
 ba.s...ra..aak.
 aa.aaaa.araf...
-c..r.faba.g...b`, //16 - space 
+c..r.faba.g...b`, //32 - space 
   map`.`,
   map`
 .za...a....a.....
@@ -660,8 +708,9 @@ aa.a.aa.a.a.aa...
 raaaaaaaa.aa.b...
 .a.......r!a.ak..
 .b.aaaabaaaa.aaaa
-fa...............`,//17 - space 
-  map`.`,
+fa...............`,//34 - space 
+  map`
+.`,
   map`
 ............
 ............
@@ -675,7 +724,7 @@ fa...............`,//17 - space
 .ckc.....c..
 .ccc.ccc.c..
 ...c.c.c.c..
-...ccc.ccc..`,//18 - space 
+...ccc.ccc..`,//36 - space 
 ];
 const startScreen = [
   map`
@@ -742,6 +791,7 @@ let shipPosX;
 let shipPosY;
 let alienPosX;
 let alienPosY;
+let hunger;
 let crystals = 0;
 let stepCount = 0;
 let previousX = 0;
@@ -772,6 +822,7 @@ function playerDeath ()
     previousX = 0;
     previousY = 0;
     crystals = 0;
+    hunger = 20;
     cowsCurrent = 0;
     setMap(levels[level]);
     gateCoordinates = { x: 0, y: 0 };
@@ -873,6 +924,25 @@ afterInput(() => {
 // -------------- level with alien ------------------
   if(level%2 != 0)
   {
+    if (level>=7)
+    {
+      hunger--;
+      if( hunger < 10)
+      {
+      hunger = '0' + hunger;
+      }
+      addText( "Hunger:" + hunger,
+            {
+              x:0,
+              y:3,
+              color: color`6`
+            })
+      if(hunger==0)
+      {
+        playerDeath();
+      }
+    }
+    
     let alienSprite = getFirst(alien);
     previousX = alienPosX;
     previousY = alienPosY;
@@ -881,27 +951,29 @@ afterInput(() => {
     stepCount += 1;
     if (alienPosX >= 0 && alienPosY >= 0) {
     //check if tile that alien is standing on contains sprite - cow
-        let spriteToRemove = getTile(alienPosX, alienPosY).find(sprite => sprite.type === cow);
-        if (spriteToRemove) {
-            //playTune(crysSound);
-            spriteToRemove.remove();
-            /*if(level==4){
-              let arrowRemove = getFirst(arrowPointDown);
-              arrowRemove.remove();
-            }*/
+        let cowToRemove = getTile(alienPosX, alienPosY).find(sprite => sprite.type === cow);
+        if (cowToRemove) {
+            cowToRemove.remove();
             cowsCurrent += 1;
              console.log("Cows this Lv:" , cowsCurrent);
           console.log("Cows fin:" , cowsFinal);
-      
+      }
+      let appleToRemove = getTile(alienPosX, alienPosY).find(sprite => sprite.type === apple);
+        if (appleToRemove) {
+            appleToRemove.remove();
+            hunger=20;
       }
     }
-    const onHouse = tilesWith(alien, house)
-    if(onHouse.length ==1)
+    addText( "Cows:" + cowsCurrent,
+            {
+              x:13,
+              y:1,
+              color: color`5`
+            })
+    const howMuchCows = tilesWith(cow)
+    if(howMuchCows == 0)
     {
-      playerDeath();
-    }
-    // ------------------------------ win!!!!! --------------
-    const  onShip = tilesWith(shipGoal, alien)
+          const  onShip = tilesWith(shipGoal, alien)
   if ( onShip.length >= 1){ 
     level +=1;
     if (level < levels.length) { 
@@ -921,6 +993,14 @@ afterInput(() => {
       }
     }
   }
+    }
+    const onHouse = tilesWith(alien, house)
+    if(onHouse.length ==1)
+    {
+      playerDeath();
+    }
+    // ------------------------------ win!!!!! --------------
+
 
 
   
@@ -1054,7 +1134,7 @@ stepOnPortal();
       stepCount = 0;
       clearText();
       addText("Lv:" + (level),{
-           x:1,
+           x:0,
            y:1,
         color: color`5`})
       //reset the gate coordinates after changing map
