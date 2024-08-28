@@ -1,7 +1,11 @@
 # Space maze using Sprig 
+It was made for Hack Club Arcade - summer 2024
+
 game available on: https://sprig.hackclub.com/share/EwAWh5SkZ1bAg7GRjHbG
 To play this game, just click the link and press "Run". All instructions will be displayed after launching!
+You play as a space ship roaming around the space-maze, trying to escape.
 
+## Something about the game
 During the process of creating this game, I learnt a lot of new things. It is my first time coding in JS, and I'm no programming expert (only used to code some algorithms in C++).
 Making all of this has been and will be a lot of fun and a great experience for me. 
 All images/sprites used are made fully by me! 
