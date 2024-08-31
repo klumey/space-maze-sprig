@@ -12,6 +12,16 @@ j - reset current map if stuck
 i - collect an item
 k - use an item
 
+----------- ABOUT GAME ----------
+
+You are an alien flying through space mazes! Space is filled with all types of dangers, don't fall into black holes or step into rips in space and time!
+Try to escape those so you can get to the planet. 
+After landing, you're job is to abduct cows! Only after getting all of them, you can fly away on your space ship. 
+But beware! You start getting hungry - eat apples to finish your job and not starve!
+
+This game has 36 levels, every one is different and difficulty may differ between them. 
+
+Have fun!
 
 */
 
@@ -463,7 +473,7 @@ onInput("j", () => {
 });
 
 // ---------------levels/maps ------------------------
-let level = 8;
+let level = 0;
 const levels = [
   map`
 z.
@@ -614,13 +624,29 @@ aa.a.a.a...
 .a..sa...a.
 .a.a.aaara.
 ...a.......`,//18 - space 
-  map`.`,
+  map`
+.q....
+.....j
+...q..
+.qj.q.
+.....j
+.li.q.`,//19    -planet
   map`
 !ab.k
 .a...
 .a.aa
 za..?`,//20 - space 
-  map`.`,
+  map`
+.....qj....
+.q.....o...
+.........q.
+....eeej...
+....li.e...
+...e...e...
+...e...e...
+q..jeeejq..
+...........
+....o.q....`,//21    -planet
   map`
 a.s.....a..b
 a.aaaas.a.aa
@@ -633,7 +659,12 @@ aaaaraba..a.
 ?a...ar..baz
 aa.araaa.aa.
 !..a..ba....`,//22 - space 
-  map`.`,
+  map`
+o.q..q
+......
+q...q.
+eeee.j
+il....`,//23    -planet
   map `
 .r.gka!.
 .aaaaaa.
@@ -644,12 +675,26 @@ aaa.a.s.
 .a....a.
 ..saa.ac
 .s.az.ab`,//24 - space 
-  map`.`,
+  map`
+j.jq.i
+....lj
+jq....
+....qj
+jq....
+.j.j.j`,//25    -planet
   map`
 .i.
 d..
 kaf`,//26 - space 
-  map`.`,
+  map`
+....l.i.
+.joj.j.j
+q...q...
+j.j.j.j.
+.q....q.
+.j.joj.j
+.q.....q
+j.jqj.j.`,//27    -planet
   map`
 .....r.c.
 .aaaaaaar
@@ -660,7 +705,15 @@ kaf`,//26 - space
 .a?.sa...
 .aaa...a.
 ..za..baf`,//28 - space 
-  map`.`,
+  map`
+.ji.lj...
+...j..oj.
+.j...j...
+...j...j.
+qj...j...
+...j...j.
+.j...j...
+...j..ojq`,//29   -planet
   map`
 z..a......ab.b
 aa.a.aaaa.a...
@@ -672,7 +725,14 @@ s.aaa.a.aaaaaa
 raf.a.aaaaa..b
 .ss......fa.aa
 b..ab....ba..k`, //30 - space 
-  map`.`,
+  map`
+..i....
+.......
+...l...
+e.eeeee
+....q..
+.......
+.q.....`,//31      -planet
   map`
 ..faf.r....a...
 ...aaaa..a.aaa.
@@ -689,7 +749,14 @@ raaaaa.a..aa...
 ba.s...ra..aak.
 aa.aaaa.araf...
 c..r.faba.g...b`, //32 - space 
-  map`.`,
+  map`
+..o...
+...q..
+q.....
+eeeee.
+q.....
+.il.e.
+....e.`, // 33   -planet
   map`
 .za...a....a.....
 .ab.a.a.ba.a.baa.
@@ -710,7 +777,14 @@ raaaaaaaa.aa.b...
 .b.aaaabaaaa.aaaa
 fa...............`,//34 - space 
   map`
-.`,
+l......
+i...q..
+..o..q.
+.....q.
+....q..
+.....q.
+..o..q.
+....q..`, //35    -planet
   map`
 ............
 ............
@@ -732,14 +806,15 @@ const startScreen = [
 ......
 ......
 ......
-......
 ......`
 ];
 const endScreen = [
  map`
-...
-...
-...`,
+......
+......
+......
+......
+......`,
 ];
 
 
@@ -782,10 +857,13 @@ const winSound = tune `
 156.25: C5^156.25 + B4~156.25,
 4062.5`
 const portalSound = tune`
-108.30324909747293: B4/108.30324909747293,
-108.30324909747293: G4/108.30324909747293,
-108.30324909747293: A4/108.30324909747293,
-3140.794223826715`
+909.0909090909091: C5~909.0909090909091,
+28181.818181818184`
+const cowSound = tune`
+157.06806282722513: D4/157.06806282722513,
+157.06806282722513: E4/157.06806282722513,
+157.06806282722513: E4/157.06806282722513,
+4554.973821989529`
 //--------------------------------------------
 let shipPosX;
 let shipPosY;
@@ -954,6 +1032,7 @@ afterInput(() => {
         let cowToRemove = getTile(alienPosX, alienPosY).find(sprite => sprite.type === cow);
         if (cowToRemove) {
             cowToRemove.remove();
+            playTune(cowSound);
             cowsCurrent += 1;
              console.log("Cows this Lv:" , cowsCurrent);
           console.log("Cows fin:" , cowsFinal);
@@ -1144,7 +1223,8 @@ stepOnPortal();
       playTune(winSound);
       clearText();
       setMap(endScreen[0]);
-      addText("You win!\n", { y: 4, color: color`6` });
+      addText("You win!\n", { y: 3, color: color`6` });
+      addText("Abducted: " + cowsFinal + " cows", {y:5, color: color`8`});
       addText("Thanks for playing!", { y: 8, color: color`6` });
       addText("Made by: klumey", {y:10, color: color`6` });
       }
